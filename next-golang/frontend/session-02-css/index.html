@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title> Belajar HTML CSS</title>
+    <style>
+        /* selector h1*/
+        /* kalau selector lempeng, berarti itu untuk tag html */
+        /* kalau ada # ini untuk id */
+        /* kalau ada . ini untuk class */
+        h1 {
+            color: blue;
+            text-align: center;
+            font-size: 70px;
+
+            background-color: aquamarine;
+            border: 5px dashed red;
+            border-radius: 10px;
+            padding: 10px;
+            /* memberikan padding 4 arah sebanyak 10 px */
+        }
+
+        p {
+            color: red;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        /* selector untuk tag html yang punya property class "box" */
+        .box {
+            width: 150px;
+            height: 150px;
+            background-color: cadetblue;
+            border: 1px solid black;
+            margin: 10px;
+            display: inline-block;
+            /* membuat div menjadi inline-block, yaitu perpaduan sifat antara inline dan block */
+            vertical-align: middle;
+
+            text-align: center;
+            font-size: 20px;
+        }
+
+        /* selector untuk tag html yang punya property id "one" */
+        #one {
+            background-color: red;
+        }
+
+        .box2 {
+            background-color: chocolate;
+            border: 1px solid black;
+            margin: 10px;
+            padding: 10px;
+            width: 200px;
+            height: 200px;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .container {
+            display: flex;
+
+            border: 5px double blue;
+            flex-direction: row;
+            align-items: start;
+            justify-content: space-evenly;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        #six {
+            height: 250px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Software Engineer</h1> <!-- -->
+    <hr>
+    <a href="./index.html"> Home </a> |
+    <a href="./service.html">Service </a>
+    <hr>
+    <p>Belajar HTML CSS</p>
+    <a href="https://www.google.com">Google</a> <!-- anchor tag -->
+    <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_120x44dp.png" alt="Google Logo">
+    <img src="./assets/images/logo.png" alt="logo">
+    <!-- ul adalah parent dari li, parent node -->
+    <ul> <!-- unordered list -->
+        <!-- li adalah children dari ul, children node -->
+        <li>HTML</li>
+        <li>CSS</li>
+        <li>JavaScript</li>
+    </ul>
+    <ol> <!-- ordered list -->
+        <li>HTML</li>
+        <li>CSS</li>
+        <li>JavaScript</li>
+    </ol>
+    <div class="color-white" style="color:white"></div>
+    <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Nama</th>
+                <th>Umur</th>
+                <th>Pekerjaan</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Andi</td>
+                <td>25</td>
+                <td>Programmer</td>
+            </tr>
+            <tr>
+                <td>Budi</td>
+                <td>26</td>
+                <td>Programmer</td>
+            </tr>
+        </tbody>
+    </table>
+    <p style="color:brown"> a quick brown fox jump over a lazy dog </p>
+    <div> Biasanya div ini di pakai untuk layouting</div>
+    <div class="box" id="one"> 1 </div>
+    <div class="box" id="two"> 2 </div>
+    <div class="box" id="three"> 3 </div>
+    <div class="box" id="four"> 4 </div>
+
+    <!-- sifat asli dari div adalah block, artinya dia akan memenuhi seluruh lebar layar dan akan membuat baris baru -->
+    <div style="border: 1px solid red"> satu </div>
+    <div> dua </div>
+
+    <!-- sifat asli dari span adalah inline, artinya dia akan memenuhi lebar layar dan akan membuat baris baru -->
+    <span style="border: 1px solid red"> tiga </span>
+    <span> empat </span>
+
+    <div class="container">
+        <div class="box2" id="five"> 5 </div>
+        <div class="box2" id="six"> 6 </div>
+        <div class="box2" id="seven"> 7 </div>
+        <div class="box2" id="eight"> 8 </div>
+        <div class="box2" id="nine"> 9 </div>
+        <div class="box2" id="ten"> 10 </div>
+        <div class="box2" id="eleven"> 11 </div>
+        <div class="box2" id="twelve"> 12 </div>
+        <div class="box2" id="thirteen"> 13 </div>
+        <div class="box2" id="fourteen"> 14 </div>
+        <div class="box2" id="fifteen"> 15 </div>
+    </div>
+
+
+
+</html>
