@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loop</title>
+</head>
+
+<body>
+    <script>
+        console.log("LOOP")
+
+        // 1   7   10   15  
+        // ---------------
+        // let start = 7
+        // start++ // langkah bertambah sebanyak 1 
+        // start++
+        // start++
+        // start++
+        // console.log(start) // 11   
+
+        // perulangan dimana ada batas, 
+        // start, akhiran, langkah, besaran langkah  
+        // start   //akhiran // langkah 
+        for (let i = 7; i <= 11; i += 1) {
+            // sub scope 
+            console.log(i)
+        }
+        // console.log("end loop ", i) // 
+
+        // apakah 7 <= 11 ? true
+        // eksekusi console.log(i) = 7
+        // i++ naikkan i sebanyak 1 = 8
+
+        // apakah 8 <= 11 ? true
+        // eksekusi console.log(i) 8
+        // i++ naikkan i sebanyak 1 = 9
+
+        // apakah 9 <= 11 ? true
+        // eksekusi console.log(i) = 9
+        // i++ naikkan i sebanyak 1 = 10
+
+        // apakah 10 <= 11 ? true
+        // eksekusi console.log(i) = 10
+        // i++ naikkan i sebanyak 1 = 11
+
+        // apakah 11 <= 11 ? true
+        // eksekusi console.log(i) = 11
+        // i++ naikkan i sebanyak 1 = 12
+
+        // apakah 12 <= 11 ? false
+        // stop loop
+
+        // let isFinish = true
+        // while (isFinish) {
+        //     console.log("while loop")
+
+        // }
+        // global scope 
+        let limit = 10
+
+        // 0 > 0 
+        // check dulu
+        // baru eksekusi 
+        while (limit > 0) {
+            console.log(limit)
+            limit-- // mengurangi nilai limit sebanyak 1 
+        }
+        console.log("end loop ", limit)
+
+
+        // eksekusi dulu
+        // baru check
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Function</title>
+</head>
+
+<body>
+    <!-- import file js -->
+    <script src="assets/js/sayhello.js"></script>
+    <script>
+        console.log("FUNCTION")
+
+        // call function 
+        sayHello(3) // 3 is an argument
+        console.log('----------------')
+        sayHello(5) // 5 is an argument 
+        console.log('----------------')
+        sayHello(10)
+
+        // for (let i = 0; i <= 3; i++) {
+        //     console.log("hello world")
+        // }
+
+        // for (let i = 0; i <= 5; i++) {
+        //     console.log("hello world")
+        // }
+
+        // for (let i = 0; i <= 10; i++) {
+        //     console.log("hello world")
+        // }
+        let res = add(1, 2) // add ini ada return 
+        console.log(res)
+        let res2 = add2(1, 2) // add2 ini tidak ada return 
+        console.log(res2)
+
+        // ARROW function adalah versi lite dari function
+        const setMessage = () => "Hello World" // return "Hello World"
+        console.log(setMessage())
+        // debugger;
+
+        /*
+        function setMessage() {
+            return "Hello World"
+        }
+        */
+
+        console.log("hello" + 3)
+        console.log("23" + 3)
+        console.log("23" * 3)
+    </script>
+</body>
+
+</html>

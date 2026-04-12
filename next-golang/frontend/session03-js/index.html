@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belajar JS</title>
+
+</head>
+
+<body>
+    <button id="clickme">Klik Saya</button>
+    <script>
+        // alert(" Hello World ")
+        // console.log(" Console World ")
+        // document.write(" Document World ")
+        /* ini untuk 
+        comment multi baris */
+
+
+        const btn = document.getElementById("clickme") // selector untuk mengambil element html berdasarkan id
+        btn.addEventListener("click", function () {
+            alert(" Hello World ")
+        })
+
+        console.log("a quick brown fox jump over a lazy dog")
+        console.log(123)
+        console.log(true)
+        console.log(123 + 123)
+
+        console.log("Aries", "Dimas", "Yudhistira")
+        console.log("Aries " + "Dimas " + "Yudhistira ")
+
+        // var name = "Dimas" // tidak disarankan menggunakan var
+        let name = "Dimas" // disiplin menggunakan let dan const
+        // let name = "Hanum" // RE-Declare
+        // scope global
+        {
+            // sub scope
+            console.log(name)
+            let num = 12
+            // let name = "farida"
+            console.log(name)
+        }
+        const PI = 3.14
+        // const PI = 34 // RE-Declare tidak bisa
+        name = "Hanum" // re-assign variable let
+        console.log(name)
+        // console.log(num)
+
+        PI = 34 // tidak boleh di Re-Assign
+        console.log(PI)
+    </script>
+    <script>
+        let title = "Software Engineer"
+        let description = 'Software Engineer adalah orang yang memiliki keahlian dalam merancang, mengembangkan, menguji, dan memelihara perangkat lunak.'
+        let aboutme = `saya adalah seorang ${title}`
+        console.log("Dimas is a " + title)
+        console.log(description)
+        console.log(aboutme)
+
+        console.log(title.length)
+        console.log(title[0])
+
+        // number 
+        let age = 25
+        let nextAge = age + 1
+        let oldAge = age - 1
+        let doubleAge = age * 2
+        let halfAge = age / 2
+        let moduloAge = age % 2 // sisa bagi 25 / 2 = 12 * 2 = 24  25 - 24 = 1 
+        console.log(nextAge)
+        console.log(oldAge)
+        console.log(doubleAge)
+        console.log(halfAge)
+        console.log(moduloAge)
+
+        // 11 % 7 = 1 , 11 - 7 = 4 
+        console.log(11 % 7)
+        console.log(12 ** 2)
+        console.log(Math.pow(12, 2)) // class Math , yang mempunyai method pow 
+        // console.log(Math.sqrt(12)) // class Math , yang mempunyai method sqrt 
+        // console.log(Math.round(12.5)) // class Math , yang mempunyai method round
+        // console.log(Math.floor(12.5)) // class Math , yang mempunyai method floor
+        // console.log(Math.ceil(12.5)) // class Math , yang mempunyai method ceil
+        // console.log(Math.random()) // class Math , yang mempunyai method random
+        // console.log(Math.max(12, 2)) // class Math , yang mempunyai method max
+        // console.log(Math.min(12, 2)) // class Math , yang mempunyai method min
+        // console.log(Math.abs(-12)) // class Math , yang mempunyai method abs
+        // console.log(Math.pow(12, 2)) // class Math , yang mempunyai method pow 
+
+        // boolean 
+        console.log(true, false) // True , False
+
+        // operator pembanding 
+        console.log(2 == 2) // true 
+        console.log(2 === 2) // true 
+        console.log(2 != 2) // false 
+        console.log(2 > 2) // false 
+        console.log(2 < 2) // false 
+        console.log(2 >= 2) // true 
+        console.log(2 <= 2) // true 
+
+        console.log(" anomali js ")
+        console.log(2 == "2") // true 
+        console.log(2 === "2") // false 
+        console.log(2 != "2") // false 
+        console.log(2 !== "2") // true 
+
+        // ! ( tanda seru ) adalah negasi 
+        console.log(!true) // false 
+        console.log(!false) // true 
+
+    </script>
+
+    <script>
+        console.log(" mengetahui tipe data ")
+
+        console.log(typeof (23))
+        console.log(typeof ("23"))
+
+        console.log(" konversi ")
+        console.log(Number("123"))
+        console.log(Number("ABC")) // NaN ( Not a Number )
+        console.log(String(123))
+        console.log(Boolean(123)) // true 
+        console.log(Boolean(0)) // false 
+        console.log(Boolean("")) // false 
+        console.log(Boolean("0")) // true
+    </script>
+    <script>
+        let num2 = 12
+
+        num2++ // num2 = num2 + 1
+        // num2-- // num2 = num2 - 1 
+
+        console.log(num2) // 13 
+        console.log(num2++) // 13
+        console.log(num2) // 14
+
+    </script>
+
+</body>
+
+</html>
