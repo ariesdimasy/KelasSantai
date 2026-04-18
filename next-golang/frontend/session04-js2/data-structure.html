@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+
+<body>
+    <table border="1" cellpadding="10" cellspacing="0"
+        style="border-collapse: collapse; width: 50%; margin: 20px auto; text-align: center;">
+        <thead>
+            <tr>
+                <th> Primitive Types </th>
+                <th> Structure Types </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td> Number </td>
+                <td> Object </td>
+            </tr>
+            <tr>
+                <td> String </td>
+                <td> Array </td>
+            </tr>
+            <tr>
+                <td> Boolean </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td> Null </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td> Undefined </td>
+                <td> </td>
+            </tr>
+        </tbody>
+    </table>
+    <script>
+        const person = {
+            name: "John Doe",
+            age: 30,
+            isMarried: true,
+            address: {
+                street: "123 Main St",
+                zipCode: "10001",
+                city: "New York",
+            },
+            "strip-key-with-dash": "This is a value with a dash in the key"
+        };
+        console.log(person); // all object
+        console.log(person.name); // Output: John Doe
+        console.log(person["name"])
+
+        let keyAge = "age"
+        console.log(person[keyAge]) // Output: 30
+
+        console.log(person["strip-key-with-dash"]) // Output: This is a value with a dash in the key;
+
+        // mutable object
+        person.title = "Software Engineer";
+        console.log(person.title) // Output: Software Engineer
+        console.log(person)
+        person.name = "Dimas";
+        console.log(person.name) // Output: Dimas
+
+        delete person.isMarried
+
+        console.log(person)
+
+        person.run = function () {
+            console.log("Person is running");
+            // function yang tidak memiliki return value maka secara default akan mengembalikan nilai undefined
+        }
+
+        person.run()
+        // console.log(function())
+
+        // const name = person.name
+        // const age = person.age
+        // const title = person.title 
+
+        const { name, age, title } = person
+        console.log(name, age, title)
+
+        const person2 = person
+
+        person2.name = "Jane Doe"
+        console.log(person.name) // Output: Jane Doe
+
+        const person3 = { ...person, done: true } // mencopy , artinya seperti hanya mempassing by value
+
+        person3.name = "Dimas"
+        console.log(person.name) // Output: Jane Doe
+
+    </script>
+    <script>
+        const arr = [1, 2, 3, 4, 10]
+        console.log(arr)
+        console.log(arr[0]) // Output: 1
+
+        arr.forEach(item => {
+            console.log(item)
+        });
+
+        const arr2 = arr.map(item => item * 2)
+        console.log(arr2)
+
+        console.log(arr.length)
+        console.log(arr[arr.length - 1]) // Output: 5
+
+        arr.push(6, 7)
+        console.log(arr)
+        arr.shift(0)
+        console.log(arr)
+        arr.unshift(10, 0) // menambahkan item di awal array
+        console.log(arr)
+        arr.splice(2, 0, 20, 30) // index ke 2 , hapus 0 item , tambahkan 20 dan 30
+        console.log(arr)
+
+        const todos = [
+            { id: 1, title: "Belajar JavaScript", completed: false },
+            { id: 2, title: "Belajar React", completed: true },
+            { id: 3, title: "Belajar Node.js", completed: false },
+        ]
+
+        console.log(todos)
+        console.log(todos[0].title)
+
+        const notCompletedTodos = todos.filter(todo => todo.completed === false)
+        console.log(notCompletedTodos)
+        console.log(notCompletedTodos.length) // Output: 2
+
+        const deleteTodos = todos.filter(todo => todo.id !== 2)
+        deleteTodos.splice(0, deleteTodos.length)
+        console.log(deleteTodos) // Output: []
+
+    </script>
+</body>
+
+</html>

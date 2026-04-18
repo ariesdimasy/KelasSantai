@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Todo List — KelasSantai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./asset/style.css" type="text/css">
+
+</head>
+
+<body>
+  <!-- Header -->
+  <header class="page-header">
+    <div class="badge">
+      <span class="badge-dot"></span>
+      Session 04 — JS2
+    </div>
+    <h1>My Todo List</h1>
+    <p>Kelola tugas harianmu dengan mudah dan terorganisir.</p>
+  </header>
+
+  <!-- Main Card -->
+  <main class="card" role="main">
+
+    <!-- Add Task -->
+    <section class="add-task-section" aria-label="Tambah tugas baru">
+      <div class="add-task-label">Tambah Tugas Baru</div>
+      <div class="add-task-wrapper">
+        <!-- fokus disini -->
+        <input id="input-add-task" type="text" class="add-task-input" placeholder="Tulis judul tugas baru di sini..."
+          aria-label="Judul tugas baru" />
+        <button id="btn-add-task" onClick="addTodoItem()" class="btn-add" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+            stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Tambah
+        </button>
+      </div>
+    </section>
+
+    <!-- Stats -->
+    <div class="stats-row" role="status" aria-label="Statistik tugas">
+      <div class="stat-item">
+        <div class="stat-number">8</div>
+        <div class="stat-label">Total</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number accent">5</div>
+        <div class="stat-label">Aktif</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number green">3</div>
+        <div class="stat-label">Selesai</div>
+      </div>
+    </div>
+
+    <!-- Filter Tabs -->
+    <nav class="filter-section" aria-label="Filter tugas">
+      <span class="filter-label">Filter:</span>
+      <button id="filter-all" class="filter-btn active" type="button">Semua</button>
+      <button id="filter-active" class="filter-btn" type="button">Aktif</button>
+      <button id="filter-done" class="filter-btn" type="button">Selesai</button>
+      <button id="filter-high" class="filter-btn" type="button">🔴 Prioritas Tinggi</button>
+    </nav>
+
+    <!-- Search -->
+    <div class="search-wrapper">
+      <span class="search-icon" aria-hidden="true">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </span>
+      <!-- fokus disini -->
+      <input id="input-search" type="search" class="search-input" placeholder="Cari tugas..." aria-label="Cari tugas" />
+    </div>
+
+    <!-- Todo List -->
+    <ol class="todo-list" aria-label="Daftar tugas">
+
+      <!-- Item 1 — Active, High -->
+
+
+    </ol>
+
+    <!-- Footer -->
+    <div class="card-footer">
+      <span class="footer-text">5 tugas tersisa</span>
+      <button id="btn-clear-done" class="btn-clear" type="button">
+        Hapus yang Selesai
+      </button>
+    </div>
+
+  </main>
+  <script>
+
+    // localStorage.setItem("todos", "[]")
+
+    getTodoList()
+
+    function getTodoList() {
+      const todos = JSON.parse(localStorage.getItem("todos")) || []
+
+      const todoListElement = document.querySelector(".todo-list")
+
+      // kosongkan dulu isi todo list sebelum menampilkan data yang baru
+      todoListElement.innerHTML = ""
+
+      console.log("todos : ", todos)
+
+      todos.forEach(todo => {
+        const todoItemElement = document.createElement("li")
+        todoItemElement.classList.add("todo-item")
+        todoItemElement.setAttribute("id", `todo-${todo.id}`)
+
+
+        todoListElement.innerHTML += (`
+          <div class="todo-checkbox" aria - hidden="true" >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+          stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        </div >
+        <div class="todo-content">
+          <div class="todo-title">${todo.title}</div>
+          <div class="todo-meta">
+            <span class="todo-date">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              ${todo.createdAt}
+            </span>
+            <span class="todo-priority priority-high">High</span>
+          </div>
+        </div>
+        <div class="todo-actions">
+          <button class="icon-btn" type="button" title="Edit tugas" aria-label="Edit tugas">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+          </button>
+          <button class="icon-btn delete" type="button" title="Hapus tugas" aria-label="Hapus tugas">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+              <path d="M10 11v6"></path>
+              <path d="M14 11v6"></path>
+              <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
+            </svg>
+          </button>
+        </div>
+      `)
+      })
+
+      todoListElement.appendChild(todoItemElement)
+
+    }
+
+    function addTodoItem() {
+      const inputAddTask = document.getElementById("input-add-task");
+      const title = inputAddTask.value
+
+      /// get dulu localstorage dengan key todos , lalu ubah stringnya menjadi array dengan JSON.parse
+      const todos = JSON.parse(localStorage.getItem("todos")) || []
+
+      const newTask = {
+        id: Date.now(),
+        title: title,
+        completed: false,
+        priority: "low",
+        createdAt: new Date() // generate date today 
+      }
+
+      // masukkan task baru ke dalam array todos
+      todos.push(newTask)
+
+      // simpan kembali array todos ke dalam localstorage dengan key todos , ubah dulu arraynya menjadi string dengan JSON.stringify
+      localStorage.setItem("todos", JSON.stringify(todos))
+
+      inputAddTask.value = ""
+
+      getTodoList()
+
+    }
+  </script>
+</body>
+
+</html>

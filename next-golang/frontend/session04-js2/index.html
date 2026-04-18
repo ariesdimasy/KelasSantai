@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box {
+            width: 100px;
+            height: 100px;
+            background-color: lightblue;
+            margin: 10px;
+            display: inline-block;
+        }
+
+        .oval {
+            width: 100px;
+            height: 50px;
+            background-color: lightgreen;
+            margin: 10px;
+            display: inline-block;
+            border-radius: 50%;
+        }
+
+        .dark {
+            background-color: darkgray;
+
+        }
+
+        .light {
+            background-color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 id="judul"> Belajar Javascript DOM </h1>
+    <div class="box" id="box1"> Box 1 </div>
+    <div class="box" id="box2"> Box 2 </div>
+    <div class="box" id="box3"> Box 3 </div>
+    <div class="box" id="box4"> Box 4 </div>
+
+    <button onclick="changeToOval()"> Change to Oval </button>
+
+    <button onclick="changeTheme()"> Change to Dark / Light </button>
+    <ul>
+        <li> List 1 </li>
+        <li> List 2 </li>
+        <li> List 3 </li>
+    </ul>
+
+    <div class="dparent">
+        <p> paragraf di dalam div </p>
+    </div>
+    <div class="dparent">
+        <div>
+            <p> paragraf di dalam div di dalam div </p>
+        </div>
+    </div>
+    <div>
+        <input id="name" type="text" value="" />
+    </div>
+    <script>
+
+        /* 
+          selecteor dibagi 3 yaitu :
+          1. untuk tag / element , bisa banyak. maka tipe datanya adalah array 
+          2. untuk class , bisa banyak. maka tipe datanya adalah array
+          3. untuk id , hanya bisa satu. maka tipe datanya adalah object
+
+          kalau querySelector itu untuk mengambil data yang pertama kali ditemukan saja. ( ini tipe datanya object )
+          sedangkan querySelectorAll itu untuk mengambil semua data yang ditemukan ( ini tipe datanya array )
+        */
+
+        const boxes = document.querySelector('.box');
+        const boxesAll = document.querySelectorAll('.box');
+        console.log(boxes);
+        console.log(boxesAll)
+
+        // looping setiap item pada data type Array
+        boxesAll.forEach((item) => {
+            console.log(item.textContent);
+        })
+
+        const box1 = document.getElementById('box1');
+        console.log(box1);
+        console.log(box1.textContent);
+
+        const boxClasses = document.getElementsByClassName('box');
+        console.log(boxClasses)
+
+        console.log(boxClasses[0].textContent)
+        console.log(boxClasses[1].textContent)
+
+        console.log(document.querySelector("ul > li:first-child").textContent);
+
+        console.log(document.querySelector("div.dparent > p").textContent)
+
+        const judul = document.getElementById('judul');
+
+        judul.innerText = "Belajar Javascript DOM Manipulation";
+        judul.innerHTML = "<i>Belajar Javascript DOM Manipulation</i>";
+
+        judul.style.color = "red";
+        judul.style.border = "2px solid blue"
+        judul.style.padding = "10px"
+
+        function changeToOval() {
+            // get semua element dengan class box
+            const boxesAll = document.querySelectorAll('.box');
+
+            // ubah semua element dengan class box menjadi oval dengan cara 
+            // menambahkan class oval dan menghapus class box
+            boxesAll.forEach((item) => {
+                item.classList.add('oval');
+                item.classList.remove('box');
+            })
+        }
+
+        function changeTheme() {
+            const body = document.body;
+
+            // jika body tidak memiliki class dark maka tambahkan class dark
+            // tanda seru ( ! ) itu untuk negasi atau membalikkan nilai boolean
+            if (!body.classList.contains('dark')) {
+                body.classList.toggle('dark');
+            } else {
+                body.classList.toggle('light');
+
+            }
+
+        }
+
+        // document.getElementById("judul").addEventListener("mouseenter", function () {
+        //     alert("Mouse masuk ke judul");
+        // })
+        // document.getElementById("judul").addEventListener("click", function () {
+        //     alert("Judul di klik");
+        // })
+
+        // judul.addEventListener("blur", function () {
+        //     alert("Judul kehilangan fokus");
+        // })
+
+        const nameInput = document.getElementById("name");
+
+        nameInput.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                alert("Anda menekan tombol Enter");
+            }
+            console.log("Key down : " + event.key);
+        })
+    </script>
+</body>
+
+</html>
