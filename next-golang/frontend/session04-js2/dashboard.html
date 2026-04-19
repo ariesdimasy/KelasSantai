@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Analytics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #050505;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        ::selection {
+            background-color: #7f1d1d;
+            color: white;
+        }
+
+        .chart-bar {
+            transition: all 0.3s ease;
+        }
+
+        .chart-bar:hover {
+            background-color: #dc2626 !important;
+            transform: scaleY(1.05);
+            transform-origin: bottom;
+        }
+
+        .sidebar-link {
+            transition: all 0.15s ease;
+        }
+
+        .sidebar-link:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+
+        .sidebar-link.active {
+            background-color: rgba(220, 38, 38, 0.1);
+            border-right: 2px solid #dc2626;
+            color: white;
+        }
+
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            background-color: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .table-row {
+            transition: background-color 0.15s ease;
+        }
+
+        .table-row:hover {
+            background-color: rgba(255, 255, 255, 0.03);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen text-white">
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="fixed left-0 top-0 h-screen w-64 bg-[#0a0a0a] border-r border-white/5 flex flex-col z-50">
+            <!-- Logo -->
+            <div class="h-16 flex items-center px-6 border-b border-white/5">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center">
+                        <i data-lucide="zap" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <span class="text-lg font-medium tracking-tight">Analytics</span>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex-1 py-6 px-3 overflow-y-auto">
+                <div class="mb-6">
+                    <p class="px-3 text-xs font-medium text-neutral-500 uppercase tracking-wider mb-3">Menu Utama</p>
+                    <a href="#" class="sidebar-link active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm">
+                        <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                        Dashboard
+                    </a>
+                    <a href="#"
+                        class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-neutral-400">
+                        <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+                        Analytics
+                    </a>
+                    <a href="#"
+                        class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-neutral-400">
+                        <i data-lucide="users" class="w-5 h-5"></i>
+                        Pelanggan
+                    </a>
+                    <a href="#"
+                        class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-neutral-400">
+                        <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                        Produk
+                    </a>
+                    <a href="#"
+                        class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-neutral-400">
+                        <i data-lucide="receipt" class="w-5 h-5"></i>
+                        Transaksi
+                    </a>
+                </div>
+
+                <div class="mb-6">
+                    <p class="px-3 text-xs font-medium text-neutral-500 uppercase tracking-wider mb-3">Lainnya</p>
+                    <a href="#"
+                        class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-neutral-400">
+                        <i data-lucide="file-text" class="w-5 h-5"></i>
+                        Laporan
+                    </a>
+                    <a href="#"
+                        class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-neutral-400">
+                        <i data-lucide="settings" class="w-5 h-5"></i>
+                        Pengaturan
+                    </a>
+                </div>
+            </nav>
+
+            <!-- User Profile -->
+            <div class="p-4 border-t border-white/5">
+                <div class="flex items-center gap-3 p-3 rounded-lg bg-white/5">
+                    <div
+                        class="w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center text-sm font-medium">
+                        AD
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium truncate">Admin User</p>
+                        <p class="text-xs text-neutral-500 truncate">admin@contoh.com</p>
+                    </div>
+                    <button class="text-neutral-400 hover:text-white transition-colors">
+                        <i data-lucide="log-out" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="ml-64 flex-1 min-h-screen">
+            <!-- Header -->
+            <header
+                class="sticky top-0 h-16 bg-[#050505]/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between px-8 z-40">
+                <div class="flex items-center gap-4">
+                    <h1 class="text-xl font-medium tracking-tight">Dashboard</h1>
+                    <span class="text-xs text-neutral-500">/ Overview</span>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <!-- Search -->
+                    <div class="relative">
+                        <i data-lucide="search"
+                            class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500"></i>
+                        <input type="text" placeholder="Cari..."
+                            class="w-64 h-10 pl-10 pr-4 bg-white/5 border border-white/10 rounded-lg text-sm placeholder-neutral-500 focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/50 transition-all">
+                    </div>
+
+                    <!-- Notifications -->
+                    <button
+                        class="relative w-10 h-10 flex items-center justify-center rounded-lg bg-white/5 border border-white/10 hover:border-white/20 transition-colors">
+                        <i data-lucide="bell" class="w-5 h-5 text-neutral-400"></i>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+
+                    <!-- Messages -->
+                    <button
+                        class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/5 border border-white/10 hover:border-white/20 transition-colors">
+                        <i data-lucide="message-square" class="w-5 h-5 text-neutral-400"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="p-8">
+                <!-- Welcome Section -->
+                <div class="mb-8">
+                    <h2 class="text-3xl font-medium tracking-tight mb-2">Selamat Datang Kembali! 👋</h2>
+                    <p class="text-neutral-400">Berikut adalah ringkasan aktivitas bisnis Anda hari ini.</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <!-- Card 1 -->
+                    <div class="stat-card bg-[#0a0a0a] border border-white/5 rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-red-500/10 rounded-xl flex items-center justify-center">
+                                <i data-lucide="dollar-sign" class="w-6 h-6 text-red-500"></i>
+                            </div>
+                            <span
+                                class="flex items-center gap-1 text-xs text-green-400 bg-green-400/10 px-2 py-1 rounded-full">
+                                <i data-lucide="trending-up" class="w-3 h-3"></i>
+                                +12.5%
+                            </span>
+                        </div>
+                        <p class="text-sm text-neutral-400 mb-1">Total Pendapatan</p>
+                        <p class="text-2xl font-medium tracking-tight">Rp 847.5 Jt</p>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="stat-card bg-[#0a0a0a] border border-white/5 rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center">
+                                <i data-lucide="shopping-cart" class="w-6 h-6 text-blue-500"></i>
+                            </div>
+                            <span
+                                class="flex items-center gap-1 text-xs text-green-400 bg-green-400/10 px-2 py-1 rounded-full">
+                                <i data-lucide="trending-up" class="w-3 h-3"></i>
+                                +8.2%
+                            </span>
+                        </div>
+                        <p class="text-sm text-neutral-400 mb-1">Total Pesanan</p>
+                        <p class="text-2xl font-medium tracking-tight">2,847</p>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="stat-card bg-[#0a0a0a] border border-white/5 rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center">
+                                <i data-lucide="users" class="w-6 h-6 text-purple-500"></i>
+                            </div>
+                            <span
+                                class="flex items-center gap-1 text-xs text-green-400 bg-green-400/10 px-2 py-1 rounded-full">
+                                <i data-lucide="trending-up" class="w-3 h-3"></i>
+                                +24.3%
+                            </span>
+                        </div>
+                        <p class="text-sm text-neutral-400 mb-1">Pelanggan Baru</p>
+                        <p class="text-2xl font-medium tracking-tight">1,249</p>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="stat-card bg-[#0a0a0a] border border-white/5 rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center">
+                                <i data-lucide="package" class="w-6 h-6 text-orange-500"></i>
+                            </div>
+                            <span
+                                class="flex items-center gap-1 text-xs text-red-400 bg-red-400/10 px-2 py-1 rounded-full">
+                                <i data-lucide="trending-down" class="w-3 h-3"></i>
+                                -3.1%
+                            </span>
+                        </div>
+                        <p class="text-sm text-neutral-400 mb-1">Produk Terjual</p>
+                        <p class="text-2xl font-medium tracking-tight">5,824</p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <!-- Revenue Chart -->
+                    <div class="lg:col-span-2 bg-[#0a0a0a] border border-white/5 rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <h3 class="text-lg font-medium">Grafik Pendapatan</h3>
+                                <p class="text-sm text-neutral-500">Pendapatan 6 bulan terakhir</p>
+                            </div>
+                            <select
+                                class="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-neutral-400 focus:outline-none">
+                                <option>6 Bulan</option>
+                                <option>1 Tahun</option>
+                                <option>Semua</option>
+                            </select>
+                        </div>
+
+                        <!-- Simple Bar Chart -->
+                        <div class="flex items-end justify-between h-48 px-4">
+                            <div class="flex flex-col items-center gap-2 flex-1">
+                                <div class="chart-bar w-full max-w-[40px] bg-red-600/60 rounded-t-md"
+                                    style="height: 60%"></div>
+                                <span class="text-xs text-neutral-500">Jan</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-2 flex-1">
+                                <div class="chart-bar w-full max-w-[40px] bg-red-600/60 rounded-t-md"
+                                    style="height: 75%"></div>
+                                <span class="text-xs text-neutral-500">Feb</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-2 flex-1">
+                                <div class="chart-bar w-full max-w-[40px] bg-red-600/60 rounded-t-md"
+                                    style="height: 45%"></div>
+                                <span class="text-xs text-neutral-500">Mar</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-2 flex-1">
+                                <div class="chart-bar w-full max-w-[40px] bg-red-600/60 rounded-t-md"
+                                    style="height: 85%"></div>
+                                <span class="text-xs text-neutral-500">Apr</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-2 flex-1">
+                                <div class="chart-bar w-full max-w-[40px] bg-red-600/60 rounded-t-md"
+                                    style="height: 65%"></div>
+                                <span class="text-xs text-neutral-500">Mei</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-2 flex-1">
+                                <div class="chart-bar w-full max-w-[40px] bg-red-600 rounded-t-md" style="height: 95%">
+                                </div>
+                                <span class="text-xs text-neutral-500">Jun</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Traffic Sources -->
+                    <div class="bg-[#0a0a0a] border border-white/5 rounded-2xl p-6">
+                        <h3 class="text-lg font-medium mb-6">Sumber Traffic</h3>
+
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm text-neutral-400">Organic Search</span>
+                                    <span class="text-sm font-medium">42%</span>
+                                </div>
+                                <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+                                    <div class="h-full bg-red-500 rounded-full" style="width: 42%"></div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm text-neutral-400">Direct</span>
+                                    <span class="text-sm font-medium">28%</span>
+                                </div>
+                                <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+                                    <div class="h-full bg-blue-500 rounded-full" style="width: 28%"></div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm text-neutral-400">Social Media</span>
+                                    <span class="text-sm font-medium">18%</span>
+                                </div>
+                                <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+                                    <div class="h-full bg-purple-500 rounded-full" style="width: 18%"></div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm text-neutral-400">Referral</span>
+                                    <span class="text-sm font-medium">12%</span>
+                                </div>
+                                <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+                                    <div class="h-full bg-orange-500 rounded-full" style="width: 12%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 pt-6 border-t border-white/5">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-neutral-500">Total Visitors</span>
+                                <span class="text-lg font-medium">284,521</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table Section -->
+                <div class="bg-[#0a0a0a] border border-white/5 rounded-2xl overflow-hidden">
+                    <div class="p-6 border-b border-white/5">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-lg font-medium">Transaksi Terbaru</h3>
+                                <p class="text-sm text-neutral-500">Daftar transaksi 7 hari terakhir</p>
+                            </div>
+                            <button
+                                class="h-10 px-4 bg-white text-black text-sm font-medium rounded-lg hover:bg-neutral-200 transition-colors flex items-center gap-2">
+                                <i data-lucide="download" class="w-4 h-4"></i>
+                                Export
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b border-white/5">
+                                    <th
+                                        class="text-left px-6 py-4 text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                        ID Transaksi</th>
+                                    <th
+                                        class="text-left px-6 py-4 text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                        Pelanggan</th>
+                                    <th
+                                        class="text-left px-6 py-4 text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                        Produk</th>
+                                    <th
+                                        class="text-left px-6 py-4 text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                        Tanggal</th>
+                                    <th
+                                        class="text-left px-6 py-4 text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                        Status</th>
+                                    <th
+                                        class="text-right px-6 py-4 text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                        Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="table-row border-b border-white/5">
+                                    <td class="px-6 py-4">
+                                        <span class="text-sm font-mono text-red-400">#TRX-001847</span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <div
+                                                class="w-8 h-8 rounded-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-xs font-medium">
+                                                AS</div>
+                                            <span class="text-sm">Ahmad Sutanto</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-neutral-400">MacBook Pro 14"</td>
+                                    <td class="px-6 py-4 text-sm text-neutral-400">24 Jun 2025</td>
+                                    <td class="px-6 py-4">
+                                        <span
+                                            class="inline-flex items-center gap-1 px-2.5 py-1 bg-green-500/10 text-green-400 text-xs rounded-full">
+                                            <span class="w-1.5 h-1.5 bg-green-400 rounded-full"></span>
+                                            Selesai
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm font-medium text-right">Rp 42.500.000</td>
+                                </tr>
+
+                                <tr class="table-row border-b border-white/5">
+                                    <td class="px-6 py-4">
+                                        <span class="text-sm font-mono text-red-400">#TRX-001846</span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <div
+                                                class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-xs font-medium">
+                                                SR</div>
+                                            <span class="text-sm">Siti Rahayu</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-neutral-400">iPhone 15 Pro Max</td>
+                                    <td class="px-6 py-4 text-sm text-neutral-400">24 Jun 2025</td>
+                                    <td class="px-6 py-4">
+                                        <span
+                                            class="inline-flex items-center gap-1 px-2.5 py-1 bg-yellow-500/10 text-yellow-400 text-xs rounded-full">
+                                            <span class="w-1.5 h-1.5 bg-yellow-400 rounded-full"></span>
+                                            Diproses
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm font-medium text-right">Rp 24.999.000</td>
+                                </tr>
+
+                                <tr class="table-row border-b border-white/5">
+                                    <td class="px-6 py-4">
+                                        <span class="text-sm font-mono text-red-400">#TRX-001845</span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <div
+                                                class="w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-teal-500 flex items-center justify-center text-xs font-medium">
+                                                BP</div>
+                                            <span class="text-sm">Budi Prasetyo</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-neutral-400">Sony WH-1000XM5</td>
+                                    <td class="px-6 py-4 text-sm text-neutral-400">23 Jun 2025</td>
+                                    <td class="px-6 py-4">
+                                        <span
+                                            class="inline-flex items-center gap-1 px-2.5 py-1 bg-green-500/10 text-green-400 text-xs rounded-full">
+                                            <span class="w-1.5 h-1.5 bg-green-400 rounded-full"></span>
+                                            Selesai
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm font-medium text-right">Rp 5.299.000</td>
+                                </tr>
+
+                                <tr class="table-row border-b border-white/5">
+                                    <td class="px-6 py-4">
+                                        <span class="text-sm font-mono text-red-400">#TRX-001844</span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <div
+                                                class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-xs font-medium">
+                                                DW</div>
+                                            <span class="text-sm">Dewi Wulandari</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-neutral-400">Samsung Galaxy S24 Ultra</td>
+                                    <td class="px-6 py-4 text-sm text-neutral-400">23 Jun 2025</td>
+                                    <td class="px-6 py-4">
+                                        <span
+                                            class="inline-flex items-center gap-1 px-2.5 py-1 bg-blue-500/10 text-blue-400 text-xs rounded-full">
+                                            <span class="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
+                                            Dikirim
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm font-medium text-right">Rp 19.999.000</td>
+                                </tr>
+
+                                <tr class="table-row">
+                                    <td class="px-6 py-4">
+                                        <span class="text-sm font-mono text-red-400">#TRX-001843</span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <div
+                                                class="w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-yellow-500 flex items-center justify-center text-xs font-medium">
+                                                RH</div>
+                                            <span class="text-sm">Rudi Hermawan</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-neutral-400">iPad Pro 12.9" M2</td>
+                                    <td class="px-6 py-4 text-sm text-neutral-400">22 Jun 2025</td>
+                                    <td class="px-6 py-4">
+                                        <span
+                                            class="inline-flex items-center gap-1 px-2.5 py-1 bg-red-500/10 text-red-400 text-xs rounded-full">
+                                            <span class="w-1.5 h-1.5 bg-red-400 rounded-full"></span>
+                                            Dibatalkan
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm font-medium text-right">Rp 0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="p-6 border-t border-white/5">
+                        <div class="flex items-center justify-between">
+                            <p class="text-sm text-neutral-500">Menampilkan 1-5 dari 847 transaksi</p>
+                            <div class="flex items-center gap-2">
+                                <button
+                                    class="w-9 h-9 flex items-center justify-center rounded-lg bg-white/5 border border-white/10 hover:border-white/20 transition-colors disabled:opacity-50"
+                                    disabled>
+                                    <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                                </button>
+                                <button
+                                    class="w-9 h-9 flex items-center justify-center rounded-lg bg-red-600 text-white text-sm font-medium">1</button>
+                                <button
+                                    class="w-9 h-9 flex items-center justify-center rounded-lg bg-white/5 border border-white/10 hover:border-white/20 transition-colors text-sm">2</button>
+                                <button
+                                    class="w-9 h-9 flex items-center justify-center rounded-lg bg-white/5 border border-white/10 hover:border-white/20 transition-colors text-sm">3</button>
+                                <span class="text-neutral-500">...</span>
+                                <button
+                                    class="w-9 h-9 flex items-center justify-center rounded-lg bg-white/5 border border-white/10 hover:border-white/20 transition-colors text-sm">170</button>
+                                <button
+                                    class="w-9 h-9 flex items-center justify-center rounded-lg bg-white/5 border border-white/10 hover:border-white/20 transition-colors">
+                                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

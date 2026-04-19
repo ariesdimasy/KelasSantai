@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="NexaCore — Perusahaan teknologi inovatif yang menghadirkan solusi digital terdepan untuk bisnis Anda." />
+  <title>NexaCore | Inovasi Digital Masa Depan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #6c63ff;
+      --primary-light: #8b85ff;
+      --primary-dark: #4f46e5;
+      --accent: #00d4aa;
+      --accent-dark: #00b08c;
+      --bg-dark: #080c14;
+      --bg-card: #0f1522;
+      --bg-card2: #131b2e;
+      --text-white: #f0f4ff;
+      --text-muted: #8a94a6;
+      --text-dim: #5a6475;
+      --border: rgba(108, 99, 255, 0.2);
+      --glow: rgba(108, 99, 255, 0.35);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
+
+    /* ===== NAVBAR ===== */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 0 5%;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(8, 12, 20, 0.7);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(108, 99, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    nav.scrolled {
+      background: rgba(8, 12, 20, 0.95);
+      box-shadow: 0 4px 30px rgba(0,0,0,0.4);
+    }
+
+    .nav-logo {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary-light), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.3s ease;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary-light);
+      border-radius: 2px;
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-white);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white !important;
+      padding: 0.5rem 1.4rem;
+      border-radius: 50px;
+      font-weight: 600 !important;
+      box-shadow: 0 0 20px var(--glow);
+      transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px var(--glow) !important;
+    }
+
+    .nav-cta::after { display: none; }
+
+    /* ===== HERO (CANVAS) ===== */
+    #hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      min-height: 700px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: radial-gradient(ellipse at 30% 50%, rgba(108, 99, 255, 0.12) 0%, transparent 60%),
+                  radial-gradient(ellipse at 70% 30%, rgba(0, 212, 170, 0.08) 0%, transparent 50%),
+                  var(--bg-dark);
+    }
+
+    #particle-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 800px;
+      padding: 0 2rem;
+      animation: fadeInUp 1s ease both;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(108, 99, 255, 0.15);
+      border: 1px solid rgba(108, 99, 255, 0.3);
+      color: var(--primary-light);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.4rem 1rem;
+      border-radius: 50px;
+      margin-bottom: 1.5rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .hero-badge span.dot {
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: inline-block;
+      animation: pulse 2s infinite;
+    }
+
+    h1.hero-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -2px;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(160deg, #ffffff 0%, #c8caff 50%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 560px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.8;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 0.85rem 2.2rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      box-shadow: 0 0 30px var(--glow);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border: none;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 50px rgba(108, 99, 255, 0.5);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text-white);
+      padding: 0.85rem 2.2rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: 1px solid rgba(240,244,255,0.2);
+      transition: all 0.2s ease;
+      display: inline-block;
+    }
+
+    .btn-outline:hover {
+      background: rgba(240,244,255,0.06);
+      border-color: rgba(240,244,255,0.4);
+      transform: translateY(-3px);
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--text-dim);
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 50px;
+      background: linear-gradient(to bottom, var(--primary), transparent);
+      animation: scrollAnim 2s ease-in-out infinite;
+    }
+
+    /* ===== STATS BAR ===== */
+    #stats {
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 2.5rem 5%;
+    }
+
+    .stats-grid {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary-light), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+    }
+
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 0.3rem;
+    }
+
+    .stat-divider {
+      width: 1px;
+      height: 60px;
+      background: var(--border);
+    }
+
+    /* ===== SECTION BASE ===== */
+    section {
+      padding: 7rem 5%;
+    }
+
+    .section-label {
+      color: var(--primary-light);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 1rem;
+      max-width: 550px;
+      line-height: 1.8;
+    }
+
+    /* ===== ABOUT ===== */
+    #about {
+      background: var(--bg-dark);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .about-visual {
+      position: relative;
+    }
+
+    .about-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .about-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+    }
+
+    .about-card-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .about-card h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+    }
+
+    .about-card p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    .about-floating {
+      position: absolute;
+      bottom: -20px;
+      right: -20px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 16px;
+      padding: 1.2rem 1.6rem;
+      box-shadow: 0 10px 40px rgba(108, 99, 255, 0.4);
+    }
+
+    .about-floating .num {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: white;
+    }
+
+    .about-floating .lbl {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.8);
+    }
+
+    /* ===== SERVICES ===== */
+    #services {
+      background: var(--bg-card);
+    }
+
+    .services-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .service-card {
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .service-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%; height: 0;
+      background: linear-gradient(to top, rgba(108, 99, 255, 0.08), transparent);
+      transition: height 0.4s ease;
+    }
+
+    .service-card:hover {
+      border-color: rgba(108, 99, 255, 0.5);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 30px rgba(108, 99, 255, 0.1);
+    }
+
+    .service-card:hover::after {
+      height: 100%;
+    }
+
+    .service-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: rgba(108, 99, 255, 0.15);
+      border: 1px solid rgba(108, 99, 255, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1.2rem;
+      transition: all 0.3s ease;
+    }
+
+    .service-card:hover .service-icon {
+      background: rgba(108, 99, 255, 0.3);
+      transform: scale(1.1);
+    }
+
+    .service-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+    }
+
+    .service-card p {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      line-height: 1.7;
+    }
+
+    /* ===== TEAM ===== */
+    #team {
+      background: var(--bg-dark);
+    }
+
+    .team-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .team-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .team-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(108, 99, 255, 0.4);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    }
+
+    .team-avatar {
+      width: 100%;
+      height: 220px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .team-avatar-bg {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+    }
+
+    .team-avatar-bg.c1 { background: linear-gradient(135deg, #1a1040, #6c63ff33); }
+    .team-avatar-bg.c2 { background: linear-gradient(135deg, #001a1a, #00d4aa33); }
+    .team-avatar-bg.c3 { background: linear-gradient(135deg, #1a0020, #ff63c833); }
+    .team-avatar-bg.c4 { background: linear-gradient(135deg, #0a1020, #63aaff33); }
+
+    .team-info {
+      padding: 1.2rem 1.5rem 1.5rem;
+    }
+
+    .team-name {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .team-role {
+      color: var(--primary-light);
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 0.7rem;
+    }
+
+    .team-bio {
+      color: var(--text-muted);
+      font-size: 0.83rem;
+      line-height: 1.6;
+    }
+
+    /* ===== TESTIMONIAL ===== */
+    #testimonials {
+      background: var(--bg-card);
+      overflow: hidden;
+    }
+
+    .testimonials-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .testi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .testi-card {
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .testi-card:hover {
+      border-color: rgba(108, 99, 255, 0.4);
+      transform: translateY(-4px);
+    }
+
+    .testi-quote {
+      font-size: 3rem;
+      color: var(--primary);
+      line-height: 1;
+      margin-bottom: 0.8rem;
+      opacity: 0.6;
+    }
+
+    .testi-text {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+      font-style: italic;
+    }
+
+    .testi-author {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .testi-ava {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .testi-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .testi-company {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+    }
+
+    .testi-stars {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      color: #fbbf24;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+    }
+
+    /* ===== CONTACT ===== */
+    #contact {
+      background: var(--bg-dark);
+    }
+
+    .contact-wrapper {
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .contact-wrapper .section-desc {
+      max-width: 100%;
+      margin: 0 auto 3rem;
+    }
+
+    .contact-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-bottom: 3rem;
+    }
+
+    .contact-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .contact-card:hover {
+      border-color: rgba(108, 99, 255, 0.45);
+      transform: translateY(-4px);
+    }
+
+    .contact-card-icon {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .contact-card-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .contact-card-value {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--primary-light);
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      text-align: left;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .form-group label {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.8rem 1rem;
+      color: var(--text-white);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.15);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border: none;
+      padding: 0.9rem 2.5rem;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      align-self: center;
+      transition: all 0.2s ease;
+      box-shadow: 0 0 25px var(--glow);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 40px rgba(108, 99, 255, 0.5);
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      padding: 4rem 5% 2rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+      max-width: 1100px;
+      margin: 0 auto 3rem;
+    }
+
+    .footer-brand .nav-logo {
+      font-size: 1.8rem;
+      display: block;
+      margin-bottom: 1rem;
+    }
+
+    .footer-brand p {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-socials {
+      display: flex;
+      gap: 0.7rem;
+    }
+
+    .social-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: rgba(108, 99, 255, 0.12);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+    }
+
+    .social-btn:hover {
+      background: rgba(108, 99, 255, 0.3);
+      transform: translateY(-3px);
+    }
+
+    .footer-col h4 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      color: var(--text-white);
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 0.6rem;
+    }
+
+    .footer-col ul li a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.87rem;
+      transition: color 0.2s ease;
+    }
+
+    .footer-col ul li a:hover {
+      color: var(--primary-light);
+    }
+
+    .footer-bottom {
+      max-width: 1100px;
+      margin: 0 auto;
+      border-top: 1px solid var(--border);
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-bottom p {
+      color: var(--text-dim);
+      font-size: 0.82rem;
+    }
+
+    .footer-bottom a {
+      color: var(--primary-light);
+      text-decoration: none;
+    }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.85); }
+    }
+
+    @keyframes scrollAnim {
+      0% { opacity: 0; transform: scaleY(0); transform-origin: top; }
+      40% { opacity: 1; }
+      100% { opacity: 0; transform: scaleY(1); transform-origin: top; }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .contact-cards { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .stat-divider { display: none; }
+    }
+
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .contact-cards { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav id="navbar">
+    <span class="nav-logo">NexaCore</span>
+    <ul class="nav-links">
+      <li><a href="#about">Tentang</a></li>
+      <li><a href="#services">Layanan</a></li>
+      <li><a href="#team">Tim</a></li>
+      <li><a href="#testimonials">Testimoni</a></li>
+      <li><a href="#contact" class="nav-cta">Hubungi Kami</a></li>
+    </ul>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section id="hero">
+    <canvas id="particle-canvas"></canvas>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        Inovasi Digital Terdepan
+      </div>
+      <h1 class="hero-title">Wujudkan Visi<br />Digital Anda</h1>
+      <p class="hero-subtitle">
+        Kami membangun solusi teknologi yang mengakselerasi pertumbuhan bisnis Anda — dari strategi hingga eksekusi, dari desain hingga deployment.
+      </p>
+      <div class="hero-buttons">
+        <a href="#services" class="btn-primary">Eksplorasi Layanan</a>
+        <a href="#contact" class="btn-outline">Konsultasi Gratis →</a>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- ===== STATS ===== -->
+  <section id="stats">
+    <div class="stats-grid">
+      <div class="stat-item reveal">
+        <div class="stat-number">250+</div>
+        <div class="stat-label">Klien Puas</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item reveal">
+        <div class="stat-number">500+</div>
+        <div class="stat-label">Proyek Selesai</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item reveal">
+        <div class="stat-number">8+</div>
+        <div class="stat-label">Tahun Pengalaman</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item reveal">
+        <div class="stat-number">99%</div>
+        <div class="stat-label">Tingkat Kepuasan</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section id="about">
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p class="section-label">Tentang Kami</p>
+        <h2 class="section-title">Mendorong Inovasi Lewat Teknologi</h2>
+        <p class="section-desc">
+          NexaCore hadir sebagai mitra transformasi digital yang terpercaya. Kami menggabungkan keahlian teknis mendalam dengan pemahaman bisnis yang komprehensif untuk menghasilkan solusi yang benar-benar berdampak.
+        </p>
+        <br/>
+        <p class="section-desc">
+          Didirikan pada 2016, kami telah membantu ratusan perusahaan — dari startup inovatif hingga enterprise berskala besar — untuk tumbuh dan berkembang di era digital.
+        </p>
+        <br/>
+        <a href="#contact" class="btn-primary" style="display: inline-block; margin-top: 0.5rem;">Kenali Kami Lebih Dalam</a>
+      </div>
+      <div class="about-visual reveal">
+        <div class="about-card">
+          <div class="about-card-icon">🚀</div>
+          <h3>Misi Kami</h3>
+          <p>Memberdayakan setiap bisnis dengan teknologi cerdas yang mampu beradaptasi, berkembang, dan memberikan nilai nyata jangka panjang bagi semua pemangku kepentingan.</p>
+        </div>
+        <div class="about-floating">
+          <div class="num">8+</div>
+          <div class="lbl">Tahun Berpengalaman</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SERVICES ===== -->
+  <section id="services">
+    <div class="services-header reveal">
+      <p class="section-label">Layanan Kami</p>
+      <h2 class="section-title">Solusi Lengkap untuk<br/>Kebutuhan Digital Anda</h2>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <div class="service-icon">🖥️</div>
+        <h3>Pengembangan Web</h3>
+        <p>Website dan aplikasi web modern yang responsif, cepat, dan skalabel menggunakan teknologi terkini.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">📱</div>
+        <h3>Aplikasi Mobile</h3>
+        <p>Aplikasi iOS dan Android yang intuitif dan performant, dibangun dengan React Native atau Flutter.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">☁️</div>
+        <h3>Cloud & DevOps</h3>
+        <p>Infrastruktur cloud yang andal dan pipeline CI/CD yang efisien untuk deployment yang mulus.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">🤖</div>
+        <h3>AI & Machine Learning</h3>
+        <p>Solusi kecerdasan buatan yang mengotomasi proses dan mengekstrak insight berharga dari data Anda.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">🎨</div>
+        <h3>UI/UX Design</h3>
+        <p>Desain antarmuka yang indah dan pengalaman pengguna yang intuitif — dari wireframe hingga prototipe.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">🔒</div>
+        <h3>Keamanan Siber</h3>
+        <p>Audit keamanan komprehensif dan implementasi protokol perlindungan untuk aset digital Anda.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TEAM ===== -->
+  <section id="team">
+    <div class="team-header reveal">
+      <p class="section-label">Tim Kami</p>
+      <h2 class="section-title">Orang-Orang Hebat di<br/>Balik NexaCore</h2>
+    </div>
+    <div class="team-grid">
+      <div class="team-card reveal">
+        <div class="team-avatar">
+          <div class="team-avatar-bg c1">👨‍💼</div>
+        </div>
+        <div class="team-info">
+          <p class="team-name">Arief Hidayat</p>
+          <p class="team-role">Chief Executive Officer</p>
+          <p class="team-bio">Visioner dengan 12 tahun pengalaman di industri teknologi dan startup digital.</p>
+        </div>
+      </div>
+      <div class="team-card reveal">
+        <div class="team-avatar">
+          <div class="team-avatar-bg c2">👩‍💻</div>
+        </div>
+        <div class="team-info">
+          <p class="team-name">Siti Rahma</p>
+          <p class="team-role">Chief Technology Officer</p>
+          <p class="team-bio">Arsitek sistem dengan keahlian deep di cloud computing dan distributed systems.</p>
+        </div>
+      </div>
+      <div class="team-card reveal">
+        <div class="team-avatar">
+          <div class="team-avatar-bg c3">👨‍🎨</div>
+        </div>
+        <div class="team-info">
+          <p class="team-name">Budi Santoso</p>
+          <p class="team-role">Head of Design</p>
+          <p class="team-bio">Desainer produk berpengalaman, berfokus pada human-centered design dan aksesibilitas.</p>
+        </div>
+      </div>
+      <div class="team-card reveal">
+        <div class="team-avatar">
+          <div class="team-avatar-bg c4">👩‍📊</div>
+        </div>
+        <div class="team-info">
+          <p class="team-name">Dian Pertiwi</p>
+          <p class="team-role">Head of Business</p>
+          <p class="team-bio">Strategi bisnis dan pengembangan klien dengan jaringan luas di berbagai industri.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TESTIMONIALS ===== -->
+  <section id="testimonials">
+    <div class="testimonials-header reveal">
+      <p class="section-label">Testimoni</p>
+      <h2 class="section-title">Kata Mereka yang<br/>Sudah Membuktikan</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card reveal">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-quote">"</div>
+        <p class="testi-text">NexaCore benar-benar mengubah cara kami beroperasi. Platform yang mereka bangun meningkatkan efisiensi tim kami hingga 3x lipat dalam 6 bulan pertama.</p>
+        <div class="testi-author">
+          <div class="testi-ava">RW</div>
+          <div>
+            <div class="testi-name">Reza Wijaya</div>
+            <div class="testi-company">CEO, TechVenture ID</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-quote">"</div>
+        <p class="testi-text">Tim NexaCore sangat profesional dan responsif. Mereka tidak hanya mengerjakan proyek, tapi juga memberikan insight berharga yang kami tidak pikirkan sebelumnya.</p>
+        <div class="testi-author">
+          <div class="testi-ava">LM</div>
+          <div>
+            <div class="testi-name">Linda Marliana</div>
+            <div class="testi-company">COO, Nusantara Retail</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-quote">"</div>
+        <p class="testi-text">Aplikasi mobile yang dibuat NexaCore mendapat rating 4.9 di App Store. Desain dan performanya luar biasa. Sangat rekomendasikan untuk bisnis apapun!</p>
+        <div class="testi-author">
+          <div class="testi-ava">HN</div>
+          <div>
+            <div class="testi-name">Hendra Nugraha</div>
+            <div class="testi-company">Founder, GoKuliner App</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section id="contact">
+    <div class="contact-wrapper">
+      <div class="reveal">
+        <p class="section-label" style="text-align:center;">Kontak</p>
+        <h2 class="section-title">Mulai Perjalanan<br/>Digital Anda</h2>
+        <p class="section-desc">
+          Ceritakan tantangan bisnis Anda dan tim kami siap merancang solusi terbaik. Konsultasi pertama gratis, tanpa komitmen.
+        </p>
+      </div>
+      <div class="contact-cards reveal" style="margin-top: 2.5rem;">
+        <div class="contact-card">
+          <div class="contact-card-icon">📍</div>
+          <div class="contact-card-label">Lokasi</div>
+          <div class="contact-card-value">Jakarta, Indonesia</div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-card-icon">📧</div>
+          <div class="contact-card-label">Email</div>
+          <div class="contact-card-value">hello@nexacore.id</div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-card-icon">📞</div>
+          <div class="contact-card-label">Telepon</div>
+          <div class="contact-card-value">+62 21 5555-0100</div>
+        </div>
+      </div>
+      <form class="contact-form reveal" id="contact-form" onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nama">Nama Lengkap</label>
+            <input type="text" id="nama" placeholder="John Doe" required />
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="john@email.com" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="layanan">Layanan yang Dibutuhkan</label>
+          <select id="layanan">
+            <option value="">-- Pilih Layanan --</option>
+            <option>Pengembangan Web</option>
+            <option>Aplikasi Mobile</option>
+            <option>Cloud & DevOps</option>
+            <option>AI & Machine Learning</option>
+            <option>UI/UX Design</option>
+            <option>Keamanan Siber</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="pesan">Ceritakan Proyek Anda</label>
+          <textarea id="pesan" placeholder="Deskripsikan kebutuhan dan tujuan proyek Anda..."></textarea>
+        </div>
+        <button type="submit" class="btn-submit" id="submit-btn">Kirim Pesan 🚀</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="nav-logo">NexaCore</span>
+        <p>Mitra transformasi digital terpercaya Anda. Kami hadir untuk membantu bisnis berkembang di era digital yang terus berevolusi.</p>
+        <div class="footer-socials">
+          <a href="#" class="social-btn" id="social-linkedin">💼</a>
+          <a href="#" class="social-btn" id="social-twitter">🐦</a>
+          <a href="#" class="social-btn" id="social-instagram">📸</a>
+          <a href="#" class="social-btn" id="social-github">💻</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Perusahaan</h4>
+        <ul>
+          <li><a href="#about">Tentang Kami</a></li>
+          <li><a href="#team">Tim Kami</a></li>
+          <li><a href="#">Karir</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#contact">Kontak</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Layanan</h4>
+        <ul>
+          <li><a href="#services">Pengembangan Web</a></li>
+          <li><a href="#services">Aplikasi Mobile</a></li>
+          <li><a href="#services">Cloud & DevOps</a></li>
+          <li><a href="#services">AI & ML</a></li>
+          <li><a href="#services">UI/UX Design</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Kebijakan Privasi</a></li>
+          <li><a href="#">Syarat & Ketentuan</a></li>
+          <li><a href="#">Cookie Policy</a></li>
+          <li><a href="#">GDPR</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 <a href="#">NexaCore</a>. All rights reserved.</p>
+      <p>Made with ❤️ in Indonesia</p>
+    </div>
+  </footer>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    // ========================================================
+    // PARTICLE CANVAS ANIMATION
+    // ========================================================
+    (function () {
+      const canvas = document.getElementById('particle-canvas');
+      const ctx = canvas.getContext('2d');
+
+      let W, H, particles, mouse;
+
+      function resize() {
+        W = canvas.width = canvas.offsetWidth;
+        H = canvas.height = canvas.offsetHeight;
+      }
+
+      mouse = { x: W / 2, y: H / 2 };
+
+      window.addEventListener('mousemove', function (e) {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = e.clientX - rect.left;
+        mouse.y = e.clientY - rect.top;
+      });
+
+      // Particle Class
+      class Particle {
+        constructor() {
+          this.reset();
+        }
+
+        reset() {
+          this.x = Math.random() * W;
+          this.y = Math.random() * H;
+          this.size = Math.random() * 2.2 + 0.4;
+          this.speedX = (Math.random() - 0.5) * 0.5;
+          this.speedY = (Math.random() - 0.5) * 0.5;
+          this.opacity = Math.random() * 0.6 + 0.1;
+          // Color palette: purple, teal, white
+          const colors = [
+            '108, 99, 255',
+            '0, 212, 170',
+            '200, 202, 255',
+            '255, 255, 255',
+          ];
+          this.color = colors[Math.floor(Math.random() * colors.length)];
+          this.baseOpacity = this.opacity;
+          this.pulseSpeed = Math.random() * 0.02 + 0.005;
+          this.pulsePhase = Math.random() * Math.PI * 2;
+        }
+
+        update(t) {
+          this.x += this.speedX;
+          this.y += this.speedY;
+
+          // Mouse repel
+          const dx = this.x - mouse.x;
+          const dy = this.y - mouse.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            const force = (120 - dist) / 120;
+            this.x += (dx / dist) * force * 1.2;
+            this.y += (dy / dist) * force * 1.2;
+          }
+
+          // Wrap edges
+          if (this.x < -10) this.x = W + 10;
+          if (this.x > W + 10) this.x = -10;
+          if (this.y < -10) this.y = H + 10;
+          if (this.y > H + 10) this.y = -10;
+
+          // Pulse opacity
+          this.opacity = this.baseOpacity + Math.sin(t * this.pulseSpeed + this.pulsePhase) * 0.15;
+        }
+
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${this.color}, ${Math.max(0, Math.min(1, this.opacity))})`;
+          ctx.fill();
+        }
+      }
+
+      function init() {
+        resize();
+        const count = Math.floor((W * H) / 8000);
+        particles = Array.from({ length: Math.min(count, 180) }, () => new Particle());
+      }
+
+      function drawConnections() {
+        const maxDist = 130;
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < maxDist) {
+              const alpha = (1 - dist / maxDist) * 0.25;
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.strokeStyle = `rgba(108, 99, 255, ${alpha})`;
+              ctx.lineWidth = 0.6;
+              ctx.stroke();
+            }
+          }
+        }
+      }
+
+      let t = 0;
+      function animate() {
+        ctx.clearRect(0, 0, W, H);
+        t++;
+        drawConnections();
+        particles.forEach(p => {
+          p.update(t);
+          p.draw();
+        });
+        requestAnimationFrame(animate);
+      }
+
+      window.addEventListener('resize', () => {
+        resize();
+        init();
+      });
+
+      init();
+      animate();
+    })();
+
+    // ========================================================
+    // NAVBAR SCROLL EFFECT
+    // ========================================================
+    window.addEventListener('scroll', function () {
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // ========================================================
+    // SCROLL REVEAL
+    // ========================================================
+    const revealElements = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    revealElements.forEach(function (el) {
+      revealObserver.observe(el);
+    });
+
+    // ========================================================
+    // CONTACT FORM
+    // ========================================================
+    function handleSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      btn.textContent = 'Mengirim...';
+      btn.disabled = true;
+      btn.style.opacity = '0.7';
+
+      setTimeout(function () {
+        btn.textContent = '✅ Pesan Terkirim!';
+        btn.style.background = 'linear-gradient(135deg, #00d4aa, #00b08c)';
+        document.getElementById('contact-form').reset();
+        setTimeout(function () {
+          btn.textContent = 'Kirim Pesan 🚀';
+          btn.disabled = false;
+          btn.style.opacity = '1';
+          btn.style.background = '';
+        }, 3000);
+      }, 1500);
+    }
+
+    // ========================================================
+    // SMOOTH ACTIVE NAV LINK
+    // ========================================================
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    window.addEventListener('scroll', function () {
+      let current = '';
+      sections.forEach(function (section) {
+        const sTop = section.offsetTop - 100;
+        if (window.scrollY >= sTop) {
+          current = section.getAttribute('id');
+        }
+      });
+      navLinks.forEach(function (a) {
+        a.style.color = '';
+        if (a.getAttribute('href') === '#' + current) {
+          a.style.color = 'var(--text-white)';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
