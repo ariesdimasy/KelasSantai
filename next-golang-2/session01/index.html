@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session01</title>
+    <style>
+        .box {
+            background-color: aquamarine;
+            width: 200px;
+            height: 200px;
+        }
+
+        .box p {
+            font-size: 72px;
+            text-align: center;
+        }
+
+        .edgeless {
+            border-radius: 50px;
+        }
+
+        #oval {
+            width: 200px;
+            height: 100px;
+            background-color: brown;
+            border-radius: 50px;
+        }
+
+        #sphere {
+            width: 100px;
+            height: 100px;
+            background-color: rgb(42, 112, 165);
+            border-radius: 50%;
+        }
+
+        .box2 {
+            background-color: darkcyan;
+            width: 100px;
+            height: 100px;
+            border: 1px solid brown;
+
+        }
+
+        #section-flexbox {
+
+            border: 5px double red;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            align-items: center;
+            flex-wrap: wrap;
+            align-content: flex-start;
+
+            font-size: 72px;
+            font-style: bold;
+            text-align: center;
+
+            height: 400px;
+
+            gap: 40px 50px;
+
+        }
+
+        #section2 {
+            display: flex;
+        }
+
+        .sidebar {
+            flex: 1;
+            background-color: chocolate;
+            height: 100px;
+        }
+
+        /* 1 bagian */
+        .main {
+            flex: 1;
+            background-color: yellowgreen;
+            height: 100px;
+        }
+
+        /* 3 bagian = lebih lebar */
+        .sidebar2 {
+            flex: 3;
+            background-color: #00ff44;
+            height: 100px;
+        }
+
+        /* 1 bagian */
+    </style>
+</head>
+
+<body>
+    <h1>Kelas Santai - Next Golang</h1>
+    <h2>Kelas Santai 2 </h2>
+    <h3>Kelas Santai 3 </h3>
+    <h4>Kelas Santai 4 </h4>
+    <h5>Kelas Santai 5 </h5>
+    <h6>Kelas Santai 6 </h6>
+    <p> Belajar HTML </p>
+
+    <hr />
+    <a href="./index.html"> Home </a> | <a href="./service.html"> Service </a> | <a href="#"> Contact </a>
+    <hr />
+
+    <!-- a dari kata anchor , artinya jangkar -->
+    <!-- p dari kata paragraf -->
+    <!-- b dari kata bold -->
+    <!-- i dari kata italic -->
+    <!-- strong dari kata strong, artinya sangat kuat -->
+    <!-- em dari kata em, artinya menonjol -->
+    <!-- hr dari kata horizontal rule, artinya garis horizontal -->
+    <!-- strong dan em artinya sama, yaitu tebal dan miring -->
+    <!-- strong dan em artinya sama, yaitu tebal dan miring -->
+    <!-- Div dari kata division, biasa digunakan untuk layouting -->
+
+    <!--
+        class adalah selector yang digunakan untuk memilih element. 
+        penanda untuk css atau javascript untuk memanggil element tertentu
+
+        class itu bisa dimiliki oleh banyak elemet 
+        satu element juga bisa memiliki banyak class
+        
+        id itu hanya boleh satu dalam 1 halaman html
+        1 element hanya boleh punya 1 id 
+
+        Sifat element dalam halaman html : 
+        - BLOCK : memenuhi lebar halaman 
+        - INLINE : hanya memenuhi lebar content ( panjang element itu tergantung isi nya)
+
+        <p></p> itu termasuk element block 
+        <span></span> itu termasuk element inline 
+
+    -->
+
+
+    <p>Lorem <strong>ipsum</strong> dolor sit amet <b>consectetur</b> adipisicing elit.
+        Quisquam, quod.</p>
+
+
+    <p align="center" style="background-color: bisque;">Di sebuah desa kecil yang tersembunyi di balik pegunungan,
+        hiduplah seorang pembuat jam tua bernama Pak Haris.
+        Setiap malam, ia duduk di bengkel kayunya yang remang-remang,
+        merakit <i>roda gigi</i> demi <em>roda gigi</em> dengan tangan yang gemetar
+        namun penuh ketelitian. Jam-jam buatannya tidak seperti jam
+        biasa — konon, siapa pun yang memilikinya akan selalu tiba tepat
+        waktu di momen-momen terpenting dalam hidupnya. Orang-orang dari
+        desa tetangga rela berjalan berhari-hari hanya untuk mendapatkan
+        satu jam buatan Pak Haris.</p>
+
+    <img src="./perfume.png" alt="Perfume" />
+
+    <p style="color:brown"> Suatu pagi, seorang gadis muda datang ke bengkelnya
+        dengan mata berkaca-kaca. Ia meminta jam untuk ibunya yang
+        sakit, berharap waktu bisa berjalan lebih lambat agar mereka
+        punya lebih banyak kenangan bersama. Pak Haris
+        tersenyum lembut, lalu memberikan jam terakhir yang pernah ia buat — jam yang jarumnya berputar ke arah
+        sebaliknya.
+        "Jam ini tidak akan menghentikan waktu," katanya pelan, "
+        tapi ia akan mengingatkanmu bahwa setiap detik yang kau
+        habiskan bersama orang yang kau cintai, tidak pernah
+        benar-benar hilang." </p>
+
+    <span style="background-color: sandybrown;">Kue lapis</span>
+    <span style="background-color: cadetblue;"> Kue Tart </span>
+    <div style="background-color: blueviolet;"> Kue Ultah</div>
+
+    Semantic Web
+
+    <h2>CSS ( Cascading Style Sheet )</h2>
+    <p style="font-size: 18px; font-family: 'Courier New', Courier, monospace;">CSS adalah bahasa styling yang digunakan
+        untuk mendesain halaman web.</p>
+
+    <div class="box">
+        <p> A </p>
+    </div>
+
+    <div class="box edgeless">
+        <p> B </p>
+    </div>
+
+    <div class="box">
+        <p> C </p>
+    </div>
+
+    <div id="oval"></div>
+    <div id="sphere"></div>
+
+    <div id="section-flexbox">
+        <div class="box2"> 1 </div>
+        <div class="box2"> 2 </div>
+        <div class="box2"> 3 </div>
+        <div class="box2"> 1 </div>
+        <div class="box2"> 2 </div>
+        <div class="box2"> 3 </div>
+        <div class="box2"> 1 </div>
+        <div class="box2"> 2 </div>
+        <div class="box2"> 3 </div>
+        <div class="box2"> 1 </div>
+        <div class="box2"> 2 </div>
+        <div class="box2"> 3 </div>
+        <div class="box2"> 1 </div>
+        <div class="box2"> 2 </div>
+        <div class="box2"> 3 </div>
+        <div class="box2"> 1 </div>
+        <div class="box2"> 2 </div>
+        <div class="box2"> 3 </div>
+
+    </div>
+    <div id="section2">
+        <div class="sidebar"> 1 </div>
+        <div class="main"> 2 </div>
+        <div class="sidebar2"> 3 </div>
+    </div>
+</body>
+
+</html>`
