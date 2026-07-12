@@ -1,0 +1,29 @@
+# Stage 1: Builder
+# Compile Go binary menggunakan full toolchain
+FROM golang:1.25-alpine AS builder
+
+WORKDIR /app/sample-gorm
+
+# Copy dependency dulu (cache layer!)
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copy source code
+COPY . .
+
+# Build static binary
+# CGO_ENABLED=0 = tidak butuh C libs
+# GOOS=linux    = target Linux
+RUN CGO_ENABLED=0 GOOS=linux     go build -o main .
+
+# Stage 2: Final — image kecil untuk production
+FROM alpine:latest
+RUN apk add --no-cache ca-certificates tzdata
+WORKDIR /sample-gorm
+# Copy hanya binary dari builder stage
+COPY --from=builder /app/sample-gorm/main .
+# Copy file .env untuk konfigurasi
+COPY .env .
+EXPOSE 3000
+CMD ["./main"]
+

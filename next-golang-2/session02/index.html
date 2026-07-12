@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- <script src="./index.js" /> -->
+    <script>
+        // kalau misalkan mengambil library , bagusnya di head
+        // jquery , CDN 
+    </script>
+</head>
+
+<body>
+    <h1> Belajar Javascript </h1>
+
+    <!-- post, get, put -->
+    <form method="post">
+        <div>
+            <label> Name </label>
+            <input type="text" name="name" id="name" />
+        </div>
+        <button onclick="alert('Hello World')"> Click Me </button>
+    </form>
+    <!-- eksternal js-->
+    <script src="./end.js"></script>
+    <script>
+        // mengambil component selector , bagusnya itu di akhir body
+        // name = document.getElementById("name").value
+
+        console.log("hello world")
+
+        console.log(2 + 2)
+        console.log(true)
+
+        // var name = "Dimas" // deklarasi variable
+        // var name = "Farida" // deklarasi ulang dengan nama variable sama , value beda
+        // console.log(name)
+
+        let myName = "Arif"
+        // let myName = "Dimas"
+        myName = "Dimas" // re-assign 
+        console.log("myName => ", myName)
+
+        const PI = 3.14 // tak bisa di re-assign dan tak bisa di re-declare
+        // PI = 4
+        console.log(PI)
+
+        let address = "Tangerang regency" // tipe data string , tipe data berisi variansi karakter yang diapit oleh kutip
+        console.log(address[0])
+        console.log(address[1])
+        address[0] = "B" // immutable 
+        console.log(address[0])
+
+        let num = 348 // number , int , decimal 
+
+        let isApplied = true // boolean , adalah tipe data yang hanya terdiri dari 2 value . yaitu true dan false 
+
+        let money = null // ketiadaan dari object , atau object yang tidak memiliki key dan value 
+        let posess = undefined // ketiadaan mutlak 
+
+        // string , boolean , number, null dan undefined  adalah tipe data primitive 
+
+        console.log(num)
+        console.log(isApplied)
+
+        console.log(money)
+        console.log(posess)
+
+        // array dan object adalh tipe data adalah tipe data collection, structure, non-primitif
+
+        let arr = [1, 2, 3, 4, 5, 6]
+        console.log(arr)
+        arr[2] = 89
+        console.log(arr)
+
+        // object literal, object tipe data dan object OOP
+        let obj = {
+            name: "Dimas",
+            title: "software engineer",
+            salary: 100_000_000
+        }
+
+        console.log(obj)
+        obj["salary"] = 2_000_000_000
+        console.log(obj)
+
+        console.log(typeof isApplied)
+        console.log(typeof address)
+
+        console.log(typeof arr)
+        console.log(typeof obj)
+
+        // assign value atau declare variable
+        let num1 = 234// 234 - 220( 20 * 11 ) = 14
+        let num2 = 20
+
+        console.log(num1 + num2)
+        console.log(num1 - num2)
+        console.log(num1 * num2)
+        console.log(num1 / num2)
+        console.log(num1 % num2) // modulus, sisa hasil bagi 
+        // 5 % 2 = 2*2 = 4 --> 5 - 4 = 1 
+
+        // perbandingan dan gerbang logika 
+        // semua perbandingan itu hasilnya mengarah pada 1 tipe data , yaitu boolean 
+        console.log("dimas" == "Dimas") // apakah "dimas" sama dengan "Dimas"
+        console.log(12 == "12") // true
+        console.log(12 === "12")
+        console.log(34 > 23) // true 
+        console.log(34 >= 23) // true
+        console.log(34 < 23) // false 
+        console.log(34 <= 23) // false 
+
+        // tanda seru itu artinya negasi 
+        console.log(34 != 23) // apakah 34 tidak sama dengan 23 
+        console.log(!true) // balikkan nilai dari true
+
+        // gerbang logika 
+        // || ( OR ) dan && (AND)
+
+        // OR , kalau salah satu nya true , maka dia jadi true 
+        console.log(true || false) // true 
+        console.log(true || true) // true 
+        console.log(false || false) // false 
+
+        // AND, kalau salah satunya false, maka dia jadi false 
+        console.log(true && false) // false 
+        console.log(true && true) // true 
+        console.log(false && false) // false 
+
+        // conditional statement / flow control 
+        if (PI == 3.14) {
+            console.log("ofc PI is 3.14")
+        }
+
+        // kondisi ini berarti false 
+        if (name == "") {
+            console.log("tolong isi nama anda")
+        } else {
+            console.log("selamat datang ", name)
+        }
+
+        let color = "yellow"
+
+        if (color == "red") {
+            console.log("stop")
+        } else if (color == "yellow") {
+            console.log("be careful")
+        } else if (color == "green") {
+            console.log("go")
+        } else {
+            console.log("invalid color")
+        }
+
+        switch (color) {
+            case "red":
+                console.log("stop")
+                break
+            case "yellow":
+                console.log("be careful")
+                break
+            case "green":
+                console.log("go")
+                break
+            default:
+                console.log("invalid color")
+                break
+        }
+
+        // loop 
+        /*
+        4 hal yang harus di perhatikan dalam loop 
+        - start ( dimana mulainya )
+        - stop ( dimana stop nya )
+        - step ( berapa langkah )
+        - direction ( maju atau mundur )
+
+        */
+
+        // iteration kalau di perulangan 
+        // let i = 0
+        // i = i + 1
+        // console.log(i)
+        // i = i + 1
+        // console.log(i)
+        // i = i + 1
+        // console.log(i)
+
+        //     a <---------------- d                  
+        //     a -------> b        d
+        for (let i = 0; i < 3; i = i + 1) {
+            // c ( eksekusi ) 
+            console.log(" iteration ke :", i)
+        }
+
+        // awalnya 0, check apakah 0 kurang dari 3, eksekusi console.log(" iteration ke :", i), i tambahkan dengan 1
+        // awalnya 1, check apakah 1 kurang dari 3, eksekusi, tambahkan i dengan 1
+        // awalnya 2; check apakah 2 kurang dari 3, eksekusi, tambahkan i dengan 1 ( i sekarang 3 )
+        // awalnya 3, check apakah 3 kurang dari 3, kalau false  berhenti dari perulangan
+
+        // infinite loop
+        // for (let j = 0; i <= 3; i = i - 1) {
+        //     console.log(" iteration ke :", i)
+        // }
+
+        /*
+                        *
+                        -4  -3 -2  -1  0  1  2  [3] 
+            ------------------------------------------------------------------
+
+
+        */
+
+        let start = 1// start 
+        let stops = 5// stop
+        // check 
+        //       5   <   5 
+        while (start < stops) {
+            console.log("iteration while ke ", start)
+            start = start + 2
+        }
+
+        // function 
+        // block code , yang sekali tulis bisa di eksekusi di manapun
+        // Write Once , Run Everywhere 
+
+        sayHello()
+
+        // sayHelloMultiple(5)
+        arr.push(34, 56, 67)
+        console.log(arr)
+        console.log(arr.length)
+        arr.pop()
+        console.log(arr)
+    </script>
+    <!-- <script src="./end.js"></script> -->
+
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+  # Layanan 1: Golang Fiber API
+  api:
+    build: . # build dari Dockerfile di folder ini
+    container_name: be09-api
+    ports:
+      - "3000:3000" # host:container
+    environment:
+      DB_HOST: ${DB_HOST} # nama service = hostname di Docker network
+      DB_PORT: ${DB_PORT} # port standar PostgreSQL
+      DB_USER: ${DB_USER} # user default PostgreSQL
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      JWT_SECRET: ${SECRET_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy # tunggu PostgreSQL siap sebelum start
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # Layanan 2: PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine # versi alpine lebih ringan dan stabil
+    container_name: be09-postgres
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432" # expose ke host agar bisa diakses dari TablePlus/DBeaver
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # data persisten lokasi baru untuk Postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d mydb" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data: # volume persisten untuk data PostgreSQL
