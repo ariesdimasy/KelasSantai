@@ -1,0 +1,17 @@
+{
+  "name": "sudoku-solver",
+  "version": "1.0.0",
+  "description": "program sudoku solver",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "sudoku"
+  ],
+  "author": "dimas",
+  "license": "ISC",
+  "dependencies": {
+    "@algorithm.ts/sudoku": "^4.0.4"
+  }
+}
