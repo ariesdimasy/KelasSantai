@@ -10,7 +10,7 @@ func bagi(a, b float64) (float64, error) {
 	if b == 0 {
 		return 0, fmt.Errorf("tidak bisa bagi dengan nol")
 	}
-	return a / b, nil // nil = tidak ada error
+	return a / b, nil // nil = tidak ada erroR
 }
 
 // Named return values
