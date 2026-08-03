@@ -11,10 +11,15 @@ import "fmt"
 // Penerima BLOK sampai ada pengirim
 // → Synchronous!
 
+// ch <- ini namanya kirim
+// <- ch ini namanya terima
+
 func main() {
 	ch := make(chan int)
 
+	// go routine
 	go func() {
+
 		fmt.Println("Goroutine: kirim 42")
 		ch <- 42 // KIRIM
 		// blok sampai main terima
