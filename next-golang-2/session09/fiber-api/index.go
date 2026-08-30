@@ -10,6 +10,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 
+	"fiber-api/database"
 	handler "fiber-api/handlers"
 	"fiber-api/middlewares"
 )
@@ -32,6 +33,9 @@ import (
 // })
 
 func main() {
+	// Koneksi ke database (ambil konfigurasi dari .env)
+	database.Connect()
+
 	// Buat instance Fiber
 	app := fiber.New(fiber.Config{
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
@@ -100,6 +104,8 @@ func main() {
 	products.Get("/", handler.GetProducts)       // /api/v1/products
 	products.Get("/:id", handler.GetProductByID) // /api/v1/products/1
 	products.Post("/", handler.CreateProduct)
+	// membuat category dan product sekaligus. bila salah satunya gagal, maka akan di rollback proses sebelumnya
+	products.Post("/category", handler.CreateCategoryAndProduct)
 
 	// Middleware pada group
 	// admin := api.Group("/admin", AuthMiddleware) // middleware level router group

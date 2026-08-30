@@ -1,18 +1,39 @@
 package models
 
+import (
+	"gorm.io/gorm"
+)
+
 type Product struct {
-	ID          uint   `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Price       int    `json:"price"`
-	Stock       int    `json:"stock"`
-	Category    string `json:"category"`
+	gorm.Model
+	Name        string `json:"name" gorm:"size:200;not null"`
+	Description string `json:"description" gorm:"type:text"`
+	Price       int    `json:"price" gorm:"not null"`
+	Stock       int    `json:"stock" gorm:"default:0"`
+	IsActive    bool   `json:"is_active" gorm:"default:true"`
+	CategoryID  uint   `json:"category_id" gorm:"not null;index"`
+	// Relasi: belongs to Category
+	Category *Category `json:"category,omitempty" gorm:"foreignKey:CategoryID"`
+}
+
+func (Product) TableName() string {
+	return "products"
 }
 
 type CreateProductRequest struct {
-	Name        string  `json:"name" validate:"required,min=3,max=100"`
-	Description string  `json:"description" validate:"required,min=10,max=1000"`
-	Price       float64 `json:"price" validate:"required,gt=0"`
-	Stock       int     `json:"stock" validate:"gte=0"` // greater than or equal
-	Category    string  `json:"category" validate:"required,oneof=Electronic Fashion Kuliner"`
+	Name        string `json:"name" validate:"required,min=3,max=100"`
+	Description string `json:"description" validate:"required,min=10,max=1000"`
+	Price       int    `json:"price" validate:"required,gt=0"`
+	Stock       int    `json:"stock" validate:"gte=0"` // greater than or equal
+	// dikirim client sebagai "category": 1  -> id kategori
+	CategoryID uint `json:"category" validate:"required"`
+}
+
+type CreateProductAndCategoryRequest struct {
+	Name        string `json:"name" validate:"required,min=3,max=100"`
+	Description string `json:"description" validate:"required,min=10,max=1000"`
+	Price       int    `json:"price" validate:"required,gt=0"`
+	Stock       int    `json:"stock" validate:"gte=0"` // greater than or equal
+	// dikirim client sebagai "category": 1  -> id kategori
+	Category string `json:"category" validate:"required"`
 }
