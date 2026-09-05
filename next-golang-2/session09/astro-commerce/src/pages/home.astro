@@ -1,0 +1,148 @@
+---
+/**
+ * /home — protected route yang diminta di skill.md.
+ * Halaman "dashboard mini" untuk role user: ringkasan pesanan + rekomendasi.
+ * Admin yang mampir ke sini tetap boleh, tapi diberi tautan ke dashboard.
+ */
+import StoreLayout from '@/layouts/StoreLayout.astro';
+import WarningBanner from '@/components/common/WarningBanner.astro';
+import { ProductCard } from '@/components/storefront/ProductCard';
+import { Badge } from '@/components/ui/badge';
+import { listProducts } from '@/lib/server/catalog';
+import { listOrders } from '@/lib/server/orders';
+import { formatDateTime, formatIDR } from '@/lib/utils';
+import { LayoutDashboard, Package, Receipt, Wallet } from 'lucide-react';
+
+const user = Astro.locals.user!;
+const [orders, recommended] = await Promise.all([
+  listOrders(user.id),
+  listProducts({ limit: 4 }),
+]);
+
+// ?error=admin-only muncul kalau user non-admin mencoba membuka /dashboard
+const accessError = Astro.url.searchParams.get('error') === 'admin-only';
+
+const totalSpent = orders.reduce((sum, order) => sum + order.total, 0);
+const lastOrders = orders.slice(0, 3);
+
+const stats = [
+  { Icon: Receipt, label: 'Pesanan', value: String(orders.length) },
+  { Icon: Wallet, label: 'Total belanja', value: formatIDR(totalSpent) },
+  {
+    Icon: Package,
+    label: 'Item dibeli',
+    value: String(
+      orders.reduce((sum, order) => sum + order.items.reduce((n, item) => n + item.quantity, 0), 0),
+    ),
+  },
+];
+---
+
+<StoreLayout
+  title="Halaman saya"
+  description="Ringkasan aktivitas belanja Anda di Astro Commerce."
+  noindex={true}
+>
+  <WarningBanner message={recommended.warning} />
+
+  <div class="container-page space-y-8 py-10">
+    {
+      accessError && (
+        <p class="rounded-lg border border-destructive/40 bg-destructive/5 p-4 text-sm text-destructive">
+          Halaman dashboard hanya bisa diakses oleh admin. Anda dialihkan ke halaman ini.
+        </p>
+      )
+    }
+
+    <header class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <h1 class="text-2xl font-semibold tracking-tight">Hai, {user.name.split(' ')[0]} 👋</h1>
+        <p class="text-sm text-muted-foreground">
+          Ini ringkasan aktivitas belanja Anda.
+        </p>
+      </div>
+      <Badge variant={user.role === 'admin' ? 'default' : 'secondary'}>role: {user.role}</Badge>
+    </header>
+
+    {
+      user.role === 'admin' && (
+        <a
+          href="/dashboard"
+          class="flex items-center gap-3 rounded-xl border border-primary/40 bg-primary/5 p-4 text-sm transition-colors hover:bg-primary/10"
+        >
+          <LayoutDashboard className="size-5 text-primary" />
+          <span>
+            <strong class="block">Mode admin aktif</strong>
+            Kelola produk, kategori, dan user di dashboard →
+          </span>
+        </a>
+      )
+    }
+
+    <dl class="grid gap-4 sm:grid-cols-3">
+      {
+        stats.map(({ Icon, label, value }) => (
+          <div class="flex items-center gap-4 rounded-xl border bg-card p-5">
+            <span class="grid size-11 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">
+              <Icon className="size-5" />
+            </span>
+            <div>
+              <dt class="text-sm text-muted-foreground">{label}</dt>
+              <dd class="text-xl font-semibold">{value}</dd>
+            </div>
+          </div>
+        ))
+      }
+    </dl>
+
+    <section class="space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-semibold">Pesanan terakhir</h2>
+        <a href="/orders" class="text-sm font-medium text-primary hover:underline">Lihat semua</a>
+      </div>
+
+      {
+        lastOrders.length === 0 ? (
+          <div class="rounded-xl border border-dashed p-10 text-center">
+            <p class="font-medium">Belum ada pesanan</p>
+            <p class="mt-1 text-sm text-muted-foreground">
+              Pesanan pertama Anda akan muncul di sini.
+            </p>
+            <a
+              href="/#produk"
+              class="mt-4 inline-flex h-9 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+            >
+              Mulai belanja
+            </a>
+          </div>
+        ) : (
+          <ul class="space-y-3">
+            {lastOrders.map((order) => (
+              <li class="flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-card p-4">
+                <div>
+                  <p class="font-medium">{order.code}</p>
+                  <p class="text-sm text-muted-foreground">
+                    {formatDateTime(order.createdAt)} · {order.items.length} produk
+                  </p>
+                </div>
+                <div class="flex items-center gap-3">
+                  <Badge variant={order.status === 'pending' ? 'outline' : 'success'}>
+                    {order.status}
+                  </Badge>
+                  <span class="font-semibold">{formatIDR(order.total)}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </section>
+
+    <section class="space-y-4">
+      <h2 class="text-lg font-semibold">Rekomendasi untuk Anda</h2>
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {recommended.data.map((product) => <ProductCard client:visible product={product} />)}
+      </div>
+    </section>
+  </div>
+</StoreLayout>

@@ -11,7 +11,11 @@ type Product struct {
 	Price       int    `json:"price" gorm:"not null"`
 	Stock       int    `json:"stock" gorm:"default:0"`
 	IsActive    bool   `json:"is_active" gorm:"default:true"`
-	CategoryID  uint   `json:"category_id" gorm:"not null;index"`
+	// Image: satu produk hanya boleh punya 1 image, jadi cukup 1 kolom
+	// berisi path penyimpanan file (mis. "uploads/products/product_1_....jpg").
+	// Kosong ("") berarti produk belum punya image.
+	Image      string `json:"image" gorm:"size:255"`
+	CategoryID uint   `json:"category_id" gorm:"not null;index"`
 	// Relasi: belongs to Category
 	Category *Category `json:"category,omitempty" gorm:"foreignKey:CategoryID"`
 }

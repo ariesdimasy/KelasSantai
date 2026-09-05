@@ -1,1 +1,4 @@
 .env
+
+# File hasil upload user — jangan ikut di-commit
+uploads/

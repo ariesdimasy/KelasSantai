@@ -1,0 +1,45 @@
+---
+/** Layout storefront: header (island React) + konten + footer. */
+import BaseLayout from './BaseLayout.astro';
+import Footer from '@/components/storefront/Footer.astro';
+import { Header } from '@/components/storefront/Header';
+
+export interface Props {
+  title: string;
+  description: string;
+  image?: string | null;
+  jsonLd?: Record<string, unknown> | null;
+  noindex?: boolean;
+  keyword?: string;
+}
+
+const { title, description, image = null, jsonLd = null, noindex = false, keyword = '' } =
+  Astro.props;
+
+const siteName = import.meta.env.PUBLIC_SITE_NAME ?? 'Astro Commerce';
+const user = Astro.locals.user;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  image={image}
+  jsonLd={jsonLd}
+  noindex={noindex}
+  bodyClass="min-h-dvh flex flex-col"
+>
+  <!-- client:load — header butuh interaktif sejak awal (badge keranjang & menu akun) -->
+  <Header
+    client:load
+    user={user}
+    siteName={siteName}
+    currentPath={Astro.url.pathname}
+    keyword={keyword}
+  />
+
+  <main class="flex-1">
+    <slot />
+  </main>
+
+  <Footer />
+</BaseLayout>

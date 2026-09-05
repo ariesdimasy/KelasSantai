@@ -32,6 +32,15 @@ func NotFound(c *fiber.Ctx, msg string) error {
 	})
 }
 
+// Conflict: 409 — request valid, tapi bentrok dengan kondisi data saat ini.
+// Contoh: produk sudah punya image, padahal hanya boleh 1 image per produk.
+func Conflict(c *fiber.Ctx, msg string) error {
+	return c.Status(409).JSON(fiber.Map{
+		"success": false,
+		"error":   msg,
+	})
+}
+
 func InternalError(c *fiber.Ctx, msg string) error {
 	return c.Status(500).JSON(fiber.Map{
 		"success": false,

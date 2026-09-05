@@ -1,0 +1,168 @@
+---
+/**
+ * Landing page storefront.
+ *
+ * Produk diambil di server (SSR) supaya HTML pertama sudah berisi katalog —
+ * penting untuk SEO dan agar halaman tetap terbaca walau JS gagal dimuat.
+ * Setelah itu <ProductBrowser> mengambil alih untuk pencarian/filter tanpa reload.
+ */
+import StoreLayout from '@/layouts/StoreLayout.astro';
+import WarningBanner from '@/components/common/WarningBanner.astro';
+import { ProductBrowser } from '@/components/storefront/ProductBrowser';
+import { ProductCard } from '@/components/storefront/ProductCard';
+import { listCategories, listProducts } from '@/lib/server/catalog';
+import { ArrowRight, CreditCard, Percent, ShieldCheck, Truck } from 'lucide-react';
+
+const params = Astro.url.searchParams;
+const sortParam = params.get('sort');
+const query = {
+  keyword: params.get('keyword') ?? '',
+  categoryId: Number(params.get('category_id') ?? 0) || 0,
+  sort: (sortParam === 'price-asc' || sortParam === 'price-desc' || sortParam === 'name-asc'
+    ? sortParam
+    : 'newest') as 'newest' | 'price-asc' | 'price-desc' | 'name-asc',
+  page: Number(params.get('page') ?? 1) || 1,
+};
+
+const [productList, categoryList] = await Promise.all([
+  listProducts({ ...query, limit: 12 }),
+  listCategories(),
+]);
+
+const warning = productList.warning ?? categoryList.warning;
+const siteName = import.meta.env.PUBLIC_SITE_NAME ?? 'Astro Commerce';
+
+// Produk termurah dengan stok tersedia — dipakai sebagai "pilihan hemat"
+const featured = [...productList.data]
+  .filter((product) => product.stock > 0)
+  .sort((a, b) => a.price - b.price)
+  .slice(0, 3);
+
+const description =
+  query.keyword
+    ? `Hasil pencarian "${query.keyword}" di ${siteName}. Belanja elektronik, fashion, dan kuliner dengan harga jujur.`
+    : `${siteName} — toko online demo bootcamp: katalog produk, keranjang, checkout, dan dashboard admin dalam satu aplikasi Astro.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: siteName,
+  url: Astro.url.origin,
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: `${Astro.url.origin}/?keyword={search_term_string}`,
+    'query-input': 'required name=search_term_string',
+  },
+};
+
+const benefits = [
+  { Icon: Truck, title: 'Gratis ongkir', text: 'Untuk pembelian di atas Rp 500.000.' },
+  { Icon: ShieldCheck, title: 'Transaksi aman', text: 'Sesi login memakai JWT httpOnly.' },
+  { Icon: CreditCard, title: 'Banyak pembayaran', text: 'Transfer, e-wallet, atau bayar di tempat.' },
+  { Icon: Percent, title: 'Harga jujur', text: 'Total selalu dihitung ulang di server.' },
+];
+---
+
+<StoreLayout
+  title={query.keyword ? `Cari: ${query.keyword}` : 'Belanja mudah, harga jujur'}
+  description={description}
+  jsonLd={jsonLd}
+  keyword={query.keyword}
+>
+  <WarningBanner message={warning} />
+
+  <!-- Hero -->
+  <section class="border-b bg-gradient-to-b from-primary/10 to-transparent">
+    <div class="container-page grid gap-10 py-14 lg:grid-cols-2 lg:items-center lg:py-20">
+      <div class="space-y-5">
+        <span class="inline-flex items-center gap-2 rounded-full border bg-background px-3 py-1 text-xs font-medium">
+          Astro + React + Go Fiber
+        </span>
+        <h1 class="text-4xl font-semibold tracking-tight sm:text-5xl">
+          Belanja mudah,<br />
+          <span class="text-primary">harga jujur.</span>
+        </h1>
+        <p class="max-w-lg text-muted-foreground">
+          {productList.meta.total} produk siap kirim dari kategori elektronik, fashion, dan kuliner.
+          Tambahkan ke keranjang, checkout, selesai.
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <a
+            href="#produk"
+            class="inline-flex h-11 items-center gap-2 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+          >
+            Lihat katalog <ArrowRight className="size-4" />
+          </a>
+          <a
+            href="/register"
+            class="inline-flex h-11 items-center rounded-md border bg-background px-6 text-sm font-medium transition-colors hover:bg-accent"
+          >
+            Buat akun
+          </a>
+        </div>
+      </div>
+
+      {
+        featured.length > 0 && (
+          <div class="grid gap-4 sm:grid-cols-3 lg:gap-3">
+            {/* client:visible — tombol "Tambah" perlu interaktif, tapi tidak mendesak */}
+            {featured.map((product) => <ProductCard client:visible product={product} />)}
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- Keunggulan -->
+  <section class="container-page grid gap-4 py-10 sm:grid-cols-2 lg:grid-cols-4">
+    {
+      benefits.map(({ Icon, title, text }) => (
+        <div class="flex gap-3 rounded-xl border bg-card p-4">
+          <span class="grid size-10 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">
+            <Icon className="size-5" />
+          </span>
+          <div>
+            <h2 class="text-sm font-semibold">{title}</h2>
+            <p class="text-sm text-muted-foreground">{text}</p>
+          </div>
+        </div>
+      ))
+    }
+  </section>
+
+  <!-- Katalog: island React untuk search + filter + paginasi -->
+  <ProductBrowser
+    client:load
+    initialProducts={productList.data}
+    initialMeta={productList.meta}
+    initialQuery={query}
+    categories={categoryList.data}
+  />
+
+  <!-- Bagian informasi (target link footer) -->
+  <section class="container-page grid gap-6 border-t py-12 md:grid-cols-3">
+    <div id="pengiriman" class="scroll-mt-20 space-y-2">
+      <h2 class="font-semibold">Info pengiriman</h2>
+      <p class="text-sm text-muted-foreground">
+        Pesanan diproses 1×24 jam. Ongkir flat Rp 20.000 ke seluruh Indonesia, dan gratis untuk
+        belanja mulai Rp 500.000.
+      </p>
+    </div>
+
+    <div id="pembayaran" class="scroll-mt-20 space-y-2">
+      <h2 class="font-semibold">Metode pembayaran</h2>
+      <p class="text-sm text-muted-foreground">
+        Transfer bank, e-wallet (OVO/GoPay/Dana), atau bayar di tempat (COD). Semua pembayaran di
+        aplikasi demo ini masih simulasi.
+      </p>
+    </div>
+
+    <div id="faq" class="scroll-mt-20 space-y-2">
+      <h2 class="font-semibold">FAQ</h2>
+      <ul class="space-y-2 text-sm text-muted-foreground">
+        <li><strong class="text-foreground">Perlu akun untuk belanja?</strong> Keranjang bisa tanpa akun, checkout wajib login.</li>
+        <li><strong class="text-foreground">Bagaimana jadi admin?</strong> Role admin diberikan dari dashboard oleh admin lain.</li>
+      </ul>
+    </div>
+  </section>
+</StoreLayout>

@@ -1,0 +1,30 @@
+---
+/**
+ * Banner peringatan saat fiber-api tidak bisa dihubungi.
+ * Lebih baik menampilkan penyebabnya daripada halaman kosong tanpa keterangan.
+ */
+import { AlertCircle } from 'lucide-react';
+
+export interface Props {
+  message?: string;
+}
+
+const { message } = Astro.props;
+---
+
+{
+  message && (
+    <div class="container-page pt-4">
+      <div class="flex items-start gap-3 rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
+        <AlertCircle className="mt-0.5 size-4 shrink-0" />
+        <div class="space-y-1">
+          <p class="font-medium">Sebagian data mungkin tidak tampil</p>
+          <p>{message}</p>
+          <p class="text-xs">
+            Jalankan backend-nya: <code class="rounded bg-amber-100 px-1">cd ../fiber-api && go run index.go</code>
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}

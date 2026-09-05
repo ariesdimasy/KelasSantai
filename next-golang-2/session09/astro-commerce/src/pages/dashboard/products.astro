@@ -1,0 +1,20 @@
+---
+/** Manajemen produk: tambah, edit, hapus, upload 1 image. */
+import DashboardLayout from '@/layouts/DashboardLayout.astro';
+import { ProductManager } from '@/components/dashboard/ProductManager';
+import { listCategories, listProducts } from '@/lib/server/catalog';
+
+const [products, categories] = await Promise.all([
+  listProducts({ limit: 100 }),
+  listCategories(),
+]);
+---
+
+<DashboardLayout title="Manajemen produk">
+  <ProductManager
+    client:load
+    initialProducts={products.data}
+    categories={categories.data}
+    warning={products.warning ?? categories.warning}
+  />
+</DashboardLayout>

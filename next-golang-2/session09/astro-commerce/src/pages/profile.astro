@@ -1,0 +1,71 @@
+---
+/** Halaman profil — protected route (wajib login). */
+import StoreLayout from '@/layouts/StoreLayout.astro';
+import { ProfileForm } from '@/components/storefront/ProfileForm';
+import { Badge } from '@/components/ui/badge';
+import { listOrders } from '@/lib/server/orders';
+import { getUser } from '@/lib/server/users';
+import { formatDate, formatIDR, initials } from '@/lib/utils';
+
+const session = Astro.locals.user!;
+const profile = await getUser(session.id);
+const orders = await listOrders(session.id);
+
+const totalSpent = orders.reduce((sum, order) => sum + order.total, 0);
+---
+
+<StoreLayout title="Profil saya" description="Kelola data akun Anda." noindex={true}>
+  <div class="container-page py-10">
+    <div class="grid gap-8 lg:grid-cols-[1fr_1.4fr]">
+      <div class="space-y-4">
+        <div class="flex items-center gap-4 rounded-xl border bg-card p-6">
+          <span class="grid size-16 place-items-center rounded-full bg-primary/10 text-xl font-semibold text-primary">
+            {initials(session.name)}
+          </span>
+          <div class="min-w-0">
+            <h1 class="truncate text-xl font-semibold">{session.name}</h1>
+            <p class="truncate text-sm text-muted-foreground">{session.email}</p>
+            <Badge className="mt-2" variant={session.role === 'admin' ? 'default' : 'secondary'}>
+              role: {session.role}
+            </Badge>
+          </div>
+        </div>
+
+        <dl class="grid grid-cols-2 gap-4">
+          <div class="rounded-xl border bg-card p-4">
+            <dt class="text-sm text-muted-foreground">Total pesanan</dt>
+            <dd class="text-2xl font-semibold">{orders.length}</dd>
+          </div>
+          <div class="rounded-xl border bg-card p-4">
+            <dt class="text-sm text-muted-foreground">Total belanja</dt>
+            <dd class="text-2xl font-semibold">{formatIDR(totalSpent)}</dd>
+          </div>
+          <div class="col-span-2 rounded-xl border bg-card p-4">
+            <dt class="text-sm text-muted-foreground">Terdaftar sejak</dt>
+            <dd class="font-medium">{formatDate(profile?.createdAt)}</dd>
+          </div>
+        </dl>
+
+        {
+          session.role === 'admin' && (
+            <a
+              href="/dashboard"
+              class="block rounded-xl border border-primary/40 bg-primary/5 p-4 text-sm transition-colors hover:bg-primary/10"
+            >
+              <strong class="block">Anda seorang admin</strong>
+              Buka dashboard untuk mengelola produk, kategori, dan user →
+            </a>
+          )
+        }
+      </div>
+
+      <div class="rounded-xl border bg-card p-6">
+        <h2 class="mb-1 text-lg font-semibold">Ubah data akun</h2>
+        <p class="mb-5 text-sm text-muted-foreground">
+          Email dipakai untuk login, jadi pastikan masih aktif.
+        </p>
+        <ProfileForm client:load user={session} />
+      </div>
+    </div>
+  </div>
+</StoreLayout>

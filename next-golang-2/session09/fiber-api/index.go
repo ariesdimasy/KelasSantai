@@ -12,6 +12,7 @@ import (
 
 	"fiber-api/database"
 	handler "fiber-api/handlers"
+	"fiber-api/helpers"
 	"fiber-api/middlewares"
 )
 
@@ -38,6 +39,10 @@ func main() {
 
 	// Buat instance Fiber
 	app := fiber.New(fiber.Config{
+		// BodyLimit: batas ukuran body request (default Fiber 4MB).
+		// Upload image dibatasi 2MB di helpers.ValidateImage, jadi 5MB
+		// di sini cukup dan tetap memberi pesan error yang rapi.
+		BodyLimit: 5 * 1024 * 1024,
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
 			code := fiber.StatusInternalServerError
 			msg := "Terjadi kesalahan internal"
@@ -96,6 +101,13 @@ func main() {
 	app.Use(limiter.New()) // 4. Rate limiting
 	//app.Use(AuthMiddleware) // 5. Cek autentikasi
 
+	// Serve file hasil upload sebagai static file.
+	// File di ./uploads/products/foo.jpg bisa diakses lewat
+	// GET http://localhost:3000/uploads/products/foo.jpg
+	app.Static(helpers.UploadURLPrefix, "./uploads", fiber.Static{
+		Browse: false, // jangan tampilkan daftar isi folder
+	})
+
 	// Route Group — prefix bersama
 	api := app.Group("/api") // semua route prefix /api
 	v1 := api.Group("/v1")   // /api/v1
@@ -106,6 +118,12 @@ func main() {
 	products.Post("/", handler.CreateProduct)
 	// membuat category dan product sekaligus. bila salah satunya gagal, maka akan di rollback proses sebelumnya
 	products.Post("/category", handler.CreateCategoryAndProduct)
+
+	// Upload file — 1 produk hanya boleh punya 1 image
+	// multipart/form-data, field: "image"
+	products.Post("/:id/image", handler.UploadProductImage)   // upload (gagal jika sudah ada)
+	products.Put("/:id/image", handler.ReplaceProductImage)   // ganti image
+	products.Delete("/:id/image", handler.DeleteProductImage) // hapus image
 
 	// Middleware pada group
 	// admin := api.Group("/admin", AuthMiddleware) // middleware level router group

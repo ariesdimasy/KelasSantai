@@ -1,0 +1,116 @@
+---
+/** Riwayat pesanan — protected route. Admin melihat semua pesanan. */
+import StoreLayout from '@/layouts/StoreLayout.astro';
+import { Badge } from '@/components/ui/badge';
+import { listOrders } from '@/lib/server/orders';
+import { formatDateTime, formatIDR, formatRelative } from '@/lib/utils';
+import { ImageIcon, ShoppingBag } from 'lucide-react';
+
+const user = Astro.locals.user!;
+const isAdmin = user.role === 'admin';
+const orders = await listOrders(isAdmin ? undefined : user.id);
+
+const statusVariant = (status: string) =>
+  status === 'pending' ? 'outline' : status === 'cancelled' ? 'destructive' : 'success';
+---
+
+<StoreLayout title="Riwayat pesanan" description="Daftar pesanan Anda." noindex={true}>
+  <div class="container-page py-10">
+    <header class="mb-6">
+      <h1 class="text-2xl font-semibold tracking-tight">
+        {isAdmin ? 'Semua pesanan' : 'Riwayat pesanan'}
+      </h1>
+      <p class="text-sm text-muted-foreground">
+        {orders.length} pesanan{isAdmin ? ' dari seluruh pelanggan' : ''}.
+      </p>
+    </header>
+
+    {
+      orders.length === 0 ? (
+        <div class="grid place-items-center gap-3 rounded-xl border border-dashed py-20 text-center">
+          <ShoppingBag className="size-10 text-muted-foreground" />
+          <p class="font-medium">Belum ada pesanan</p>
+          <a
+            href="/#produk"
+            class="inline-flex h-9 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+          >
+            Mulai belanja
+          </a>
+        </div>
+      ) : (
+        <ul class="space-y-4">
+          {orders.map((order) => (
+            <li class="rounded-xl border bg-card">
+              <div class="flex flex-wrap items-center justify-between gap-3 border-b p-4">
+                <div>
+                  <p class="font-semibold">{order.code}</p>
+                  <p class="text-sm text-muted-foreground">
+                    {formatDateTime(order.createdAt)} · {formatRelative(order.createdAt)}
+                  </p>
+                </div>
+                <div class="flex items-center gap-3">
+                  <Badge variant="secondary">{order.paymentMethod}</Badge>
+                  <Badge variant={statusVariant(order.status)}>{order.status}</Badge>
+                  <span class="font-semibold text-primary">{formatIDR(order.total)}</span>
+                </div>
+              </div>
+
+              <div class="grid gap-4 p-4 md:grid-cols-[1.5fr_1fr]">
+                <ul class="space-y-3">
+                  {order.items.map((item) => (
+                    <li class="flex items-center gap-3">
+                      <span class="size-12 shrink-0 overflow-hidden rounded-md bg-muted">
+                        {item.imageUrl ? (
+                          <img
+                            src={item.imageUrl}
+                            alt={item.name}
+                            width={48}
+                            height={48}
+                            class="size-full object-cover"
+                          />
+                        ) : (
+                          <span class="grid size-full place-items-center text-muted-foreground">
+                            <ImageIcon className="size-4" />
+                          </span>
+                        )}
+                      </span>
+                      <span class="min-w-0 flex-1">
+                        <a
+                          href={`/products/${item.productId}`}
+                          class="block truncate text-sm font-medium hover:text-primary hover:underline"
+                        >
+                          {item.name}
+                        </a>
+                        <span class="text-xs text-muted-foreground">
+                          {item.quantity} × {formatIDR(item.price)}
+                        </span>
+                      </span>
+                      <span class="text-sm font-medium">
+                        {formatIDR(item.price * item.quantity)}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+
+                <div class="space-y-1 rounded-lg bg-muted/50 p-4 text-sm">
+                  <p class="font-medium">{order.recipient.name}</p>
+                  <p class="text-muted-foreground">{order.recipient.phone}</p>
+                  <p class="text-muted-foreground">
+                    {order.recipient.address}, {order.recipient.city} {order.recipient.postalCode}
+                  </p>
+                  {order.recipient.note && (
+                    <p class="text-muted-foreground">Catatan: {order.recipient.note}</p>
+                  )}
+                  <p class="pt-2 text-xs text-muted-foreground">
+                    Subtotal {formatIDR(order.subtotal)} + ongkir{' '}
+                    {order.shippingCost === 0 ? 'gratis' : formatIDR(order.shippingCost)}
+                  </p>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+</StoreLayout>

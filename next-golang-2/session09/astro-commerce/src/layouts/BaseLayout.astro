@@ -1,0 +1,78 @@
+---
+/**
+ * Kerangka HTML + semua tag SEO.
+ *
+ * Dipakai lewat StoreLayout / DashboardLayout, jarang dipakai langsung.
+ * Halaman detail produk mengisi `image` dan `jsonLd` supaya tampilan
+ * share di WhatsApp/Twitter rapi dan Google bisa menampilkan rich result.
+ */
+import '@/styles/global.css';
+import { Toaster } from '@/components/ui/toaster';
+
+export interface Props {
+  title: string;
+  description: string;
+  /** URL gambar untuk Open Graph (boleh path relatif) */
+  image?: string | null;
+  /** Struktur data schema.org (Product, BreadcrumbList, dll) */
+  jsonLd?: Record<string, unknown> | null;
+  noindex?: boolean;
+  bodyClass?: string;
+}
+
+const {
+  title,
+  description,
+  image = null,
+  jsonLd = null,
+  noindex = false,
+  bodyClass = '',
+} = Astro.props;
+
+const siteName = import.meta.env.PUBLIC_SITE_NAME ?? 'Astro Commerce';
+const fullTitle = title.includes(siteName) ? title : `${title} — ${siteName}`;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
+const ogImage = image ? new URL(image, Astro.url.origin).href : null;
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- Open Graph (WhatsApp, Facebook, LinkedIn) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+
+    {
+      jsonLd && (
+        <script
+          type="application/ld+json"
+          is:inline
+          set:html={JSON.stringify(jsonLd)}
+        />
+      )
+    }
+  </head>
+  <body class={bodyClass}>
+    <slot />
+    <Toaster client:idle />
+  </body>
+</html>

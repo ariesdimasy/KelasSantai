@@ -1,0 +1,26 @@
+---
+import StoreLayout from '@/layouts/StoreLayout.astro';
+import { RegisterForm } from '@/components/storefront/RegisterForm';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+
+const raw = Astro.url.searchParams.get('redirect') ?? '';
+const redirectTo = raw.startsWith('/') && !raw.startsWith('//') ? raw : '';
+---
+
+<StoreLayout
+  title="Daftar"
+  description="Buat akun Astro Commerce untuk mulai belanja dan menyimpan riwayat pesanan."
+  noindex={true}
+>
+  <div class="container-page grid place-items-center py-16">
+    <Card className="w-full max-w-md">
+      <CardHeader>
+        <CardTitle>Buat akun baru</CardTitle>
+        <CardDescription>Gratis, cukup nama, email, dan password.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <RegisterForm client:load redirectTo={redirectTo} />
+      </CardContent>
+    </Card>
+  </div>
+</StoreLayout>

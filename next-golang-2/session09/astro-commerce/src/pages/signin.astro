@@ -1,0 +1,30 @@
+---
+import StoreLayout from '@/layouts/StoreLayout.astro';
+import { SignInForm } from '@/components/storefront/SignInForm';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+
+// ?redirect= diisi middleware saat user mencoba membuka protected route.
+// Hanya path internal yang diterima — mencegah open redirect ke domain lain.
+const raw = Astro.url.searchParams.get('redirect') ?? '';
+const redirectTo = raw.startsWith('/') && !raw.startsWith('//') ? raw : '';
+---
+
+<StoreLayout
+  title="Masuk"
+  description="Masuk ke akun Astro Commerce untuk checkout dan melihat riwayat pesanan."
+  noindex={true}
+>
+  <div class="container-page grid place-items-center py-16">
+    <Card className="w-full max-w-md">
+      <CardHeader>
+        <CardTitle>Masuk ke akun</CardTitle>
+        <CardDescription>
+          Admin akan diarahkan ke dashboard, pelanggan ke halaman belanja.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <SignInForm client:load redirectTo={redirectTo} />
+      </CardContent>
+    </Card>
+  </div>
+</StoreLayout>

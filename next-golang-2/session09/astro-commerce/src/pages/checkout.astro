@@ -1,0 +1,24 @@
+---
+import StoreLayout from '@/layouts/StoreLayout.astro';
+import { CheckoutForm } from '@/components/storefront/CheckoutForm';
+
+// Protected route — middleware sudah memastikan user login (lihat src/middleware.ts)
+const user = Astro.locals.user!;
+---
+
+<StoreLayout
+  title="Checkout"
+  description="Selesaikan pesanan Anda: alamat pengiriman dan metode pembayaran."
+  noindex={true}
+>
+  <div class="container-page py-10">
+    <header class="mb-6">
+      <h1 class="text-2xl font-semibold tracking-tight">Checkout</h1>
+      <p class="text-sm text-muted-foreground">
+        Isi alamat pengiriman, pilih pembayaran, lalu buat pesanan.
+      </p>
+    </header>
+
+    <CheckoutForm client:load user={user} />
+  </div>
+</StoreLayout>

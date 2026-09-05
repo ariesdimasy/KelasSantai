@@ -1,0 +1,16 @@
+---
+/** Manajemen kategori: tambah, edit, hapus. */
+import DashboardLayout from '@/layouts/DashboardLayout.astro';
+import { CategoryManager } from '@/components/dashboard/CategoryManager';
+import { listCategories } from '@/lib/server/catalog';
+
+const categories = await listCategories({ withCount: true });
+---
+
+<DashboardLayout title="Manajemen kategori">
+  <CategoryManager
+    client:load
+    initialCategories={categories.data}
+    warning={categories.warning}
+  />
+</DashboardLayout>

@@ -1,0 +1,13 @@
+---
+/** Manajemen user: tambah, edit (termasuk role), hapus. */
+import DashboardLayout from '@/layouts/DashboardLayout.astro';
+import { UserManager } from '@/components/dashboard/UserManager';
+import { listUsers } from '@/lib/server/users';
+
+const admin = Astro.locals.user!;
+const users = await listUsers();
+---
+
+<DashboardLayout title="Manajemen user">
+  <UserManager client:load initialUsers={users} currentUser={admin} />
+</DashboardLayout>

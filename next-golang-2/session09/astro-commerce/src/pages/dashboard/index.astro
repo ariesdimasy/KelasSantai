@@ -1,0 +1,137 @@
+---
+/** Ringkasan dashboard admin. */
+import DashboardLayout from '@/layouts/DashboardLayout.astro';
+import WarningBanner from '@/components/common/WarningBanner.astro';
+import { Badge } from '@/components/ui/badge';
+import { listAllProducts, listCategories } from '@/lib/server/catalog';
+import { listOrders } from '@/lib/server/orders';
+import { listUsers } from '@/lib/server/users';
+import { formatDateTime, formatIDR } from '@/lib/utils';
+import { AlertCircle, FolderTree, Package, Receipt, Users, Wallet } from 'lucide-react';
+
+const [products, categories, users, orders] = await Promise.all([
+  listAllProducts(),
+  listCategories(),
+  listUsers(),
+  listOrders(),
+]);
+
+const revenue = orders.reduce((sum, order) => sum + order.total, 0);
+const outOfStock = products.data.filter((product) => product.stock <= 0);
+const lowStock = products.data
+  .filter((product) => product.stock > 0 && product.stock <= 5)
+  .sort((a, b) => a.stock - b.stock);
+
+const stats = [
+  { Icon: Package, label: 'Produk', value: String(products.data.length), href: '/dashboard/products' },
+  { Icon: FolderTree, label: 'Kategori', value: String(categories.data.length), href: '/dashboard/categories' },
+  { Icon: Users, label: 'User', value: String(users.length), href: '/dashboard/users' },
+  { Icon: Receipt, label: 'Pesanan', value: String(orders.length), href: '/orders' },
+  { Icon: Wallet, label: 'Total transaksi', value: formatIDR(revenue), href: '/orders' },
+];
+---
+
+<DashboardLayout title="Ringkasan">
+  <WarningBanner message={products.warning} />
+
+  <div class="space-y-8">
+    <dl class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+      {
+        stats.map(({ Icon, label, value, href }) => (
+          <a href={href} class="rounded-xl border bg-card p-5 transition-colors hover:bg-accent/50">
+            <div class="flex items-center gap-3">
+              <span class="grid size-10 place-items-center rounded-lg bg-primary/10 text-primary">
+                <Icon className="size-5" />
+              </span>
+              <div>
+                <dt class="text-sm text-muted-foreground">{label}</dt>
+                <dd class="text-xl font-semibold">{value}</dd>
+              </div>
+            </div>
+          </a>
+        ))
+      }
+    </dl>
+
+    <div class="grid gap-6 lg:grid-cols-2">
+      <section class="rounded-xl border bg-card">
+        <header class="flex items-center gap-2 border-b p-4">
+          <AlertCircle className="size-4 text-amber-600" />
+          <h2 class="font-semibold">Stok perlu diisi</h2>
+        </header>
+
+        {
+          lowStock.length === 0 && outOfStock.length === 0 ? (
+            <p class="p-4 text-sm text-muted-foreground">Semua produk stoknya aman.</p>
+          ) : (
+            <ul class="divide-y">
+              {[...outOfStock, ...lowStock].slice(0, 6).map((product) => (
+                <li class="flex items-center justify-between gap-3 p-4">
+                  <a
+                    href={`/products/${product.id}`}
+                    class="truncate text-sm font-medium hover:text-primary hover:underline"
+                  >
+                    {product.name}
+                  </a>
+                  <Badge variant={product.stock <= 0 ? 'destructive' : 'outline'}>
+                    stok {product.stock}
+                  </Badge>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+
+        <footer class="border-t p-4">
+          <a href="/dashboard/products" class="text-sm font-medium text-primary hover:underline">
+            Kelola produk →
+          </a>
+        </footer>
+      </section>
+
+      <section class="rounded-xl border bg-card">
+        <header class="border-b p-4">
+          <h2 class="font-semibold">Pesanan terbaru</h2>
+        </header>
+
+        {
+          orders.length === 0 ? (
+            <p class="p-4 text-sm text-muted-foreground">Belum ada pesanan masuk.</p>
+          ) : (
+            <ul class="divide-y">
+              {orders.slice(0, 6).map((order) => (
+                <li class="flex items-center justify-between gap-3 p-4">
+                  <div class="min-w-0">
+                    <p class="truncate text-sm font-medium">{order.code}</p>
+                    <p class="text-xs text-muted-foreground">
+                      {order.recipient.name} · {formatDateTime(order.createdAt)}
+                    </p>
+                  </div>
+                  <span class="text-sm font-semibold whitespace-nowrap">
+                    {formatIDR(order.total)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+
+        <footer class="border-t p-4">
+          <a href="/orders" class="text-sm font-medium text-primary hover:underline">
+            Lihat semua pesanan →
+          </a>
+        </footer>
+      </section>
+    </div>
+
+    <section class="rounded-xl border border-dashed bg-card p-5 text-sm">
+      <h2 class="mb-2 font-semibold">Catatan integrasi backend</h2>
+      <p class="text-muted-foreground">
+        Produk & kategori berlabel <strong>fiber-api</strong> tersimpan di MySQL lewat
+        <code class="rounded bg-muted px-1">fiber-api</code>. Data berlabel <strong>lokal</strong>
+        (termasuk user, order, dan perubahan yang endpoint-nya belum ada di backend) disimpan di
+        <code class="rounded bg-muted px-1">.data/db.json</code>. Detailnya ada di README.
+      </p>
+    </section>
+  </div>
+</DashboardLayout>

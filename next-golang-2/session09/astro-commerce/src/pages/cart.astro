@@ -1,0 +1,24 @@
+---
+import StoreLayout from '@/layouts/StoreLayout.astro';
+import { CartView } from '@/components/storefront/CartView';
+
+// Keranjang boleh dibuka guest — tombol checkout yang nanti meminta login.
+const user = Astro.locals.user;
+---
+
+<StoreLayout
+  title="Keranjang"
+  description="Periksa produk di keranjang Anda sebelum checkout."
+  noindex={true}
+>
+  <div class="container-page py-10">
+    <header class="mb-6">
+      <h1 class="text-2xl font-semibold tracking-tight">Keranjang belanja</h1>
+      <p class="text-sm text-muted-foreground">
+        Ubah jumlah, hapus produk, lalu lanjut ke checkout.
+      </p>
+    </header>
+
+    <CartView client:load user={user} />
+  </div>
+</StoreLayout>

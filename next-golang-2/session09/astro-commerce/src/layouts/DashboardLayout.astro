@@ -1,0 +1,84 @@
+---
+/**
+ * Layout dashboard admin.
+ * Middleware sudah memastikan hanya role admin yang sampai ke sini
+ * (lihat src/middleware.ts), jadi layout ini tidak perlu cek ulang.
+ */
+import BaseLayout from './BaseLayout.astro';
+import { DashboardTopbar } from '@/components/dashboard/DashboardTopbar';
+import { Boxes, FolderTree, LayoutDashboard, Package, Store, Users } from 'lucide-react';
+
+export interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'Panel admin Astro Commerce' } = Astro.props;
+
+const siteName = import.meta.env.PUBLIC_SITE_NAME ?? 'Astro Commerce';
+const user = Astro.locals.user!;
+const path = Astro.url.pathname;
+
+const menu = [
+  { href: '/dashboard', label: 'Ringkasan', Icon: LayoutDashboard },
+  { href: '/dashboard/products', label: 'Produk', Icon: Package },
+  { href: '/dashboard/categories', label: 'Kategori', Icon: FolderTree },
+  { href: '/dashboard/users', label: 'User', Icon: Users },
+];
+
+const isActive = (href: string) =>
+  href === '/dashboard' ? path === href : path === href || path.startsWith(`${href}/`);
+---
+
+<BaseLayout
+  title={`${title} — Dashboard`}
+  description={description}
+  noindex={true}
+  bodyClass="min-h-dvh bg-muted/30"
+>
+  <div class="flex min-h-dvh">
+    <aside class="hidden w-64 shrink-0 flex-col border-r bg-background lg:flex">
+      <a href="/dashboard" class="flex h-16 items-center gap-2 border-b px-5 font-semibold">
+        <span class="grid size-9 place-items-center rounded-lg bg-primary text-primary-foreground">
+          <Boxes className="size-5" />
+        </span>
+        {siteName}
+      </a>
+
+      <nav class="flex flex-1 flex-col gap-1 p-3">
+        {
+          menu.map(({ href, label, Icon }) => (
+            <a
+              href={href}
+              class:list={[
+                'flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors',
+                isActive(href)
+                  ? 'bg-primary/10 font-medium text-primary'
+                  : 'text-muted-foreground hover:bg-accent hover:text-foreground',
+              ]}
+            >
+              <Icon className="size-4" />
+              {label}
+            </a>
+          ))
+        }
+      </nav>
+
+      <a
+        href="/"
+        class="m-3 flex items-center gap-3 rounded-md border px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+      >
+        <Store className="size-4" />
+        Lihat storefront
+      </a>
+    </aside>
+
+    <div class="flex min-w-0 flex-1 flex-col">
+      <DashboardTopbar client:load user={user} title={title} menu={menu.map(({ href, label }) => ({ href, label }))} currentPath={path} />
+
+      <main class="flex-1 p-4 md:p-8">
+        <slot />
+      </main>
+    </div>
+  </div>
+</BaseLayout>
