@@ -48,6 +48,13 @@ func InternalError(c *fiber.Ctx, msg string) error {
 	})
 }
 
+func Unauthorized(c *fiber.Ctx, msg string) error {
+	return c.Status(401).JSON(fiber.Map{
+		"success": false,
+		"error":   msg,
+	})
+}
+
 // PaginationMeta: info paginasi yang dikirim bareng data list
 type PaginationMeta struct {
 	Page       int   `json:"page"`

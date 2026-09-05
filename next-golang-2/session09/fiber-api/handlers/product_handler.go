@@ -26,7 +26,9 @@ func GetProducts(c *fiber.Ctx) error {
 	query := database.DB.Model(&models.Product{})
 
 	if keyword != "" {
-		query = query.Where("name LIKE ?", "%"+keyword+"%")
+		// ILIKE = LIKE case-insensitive (khusus PostgreSQL).
+		// Di MySQL cukup LIKE karena collation default-nya sudah case-insensitive.
+		query = query.Where("name ILIKE ?", "%"+keyword+"%")
 	}
 	if categoryID > 0 {
 		query = query.Where("category_id = ?", categoryID)

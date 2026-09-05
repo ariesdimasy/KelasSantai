@@ -102,7 +102,7 @@ export const api = {
   },
 
   products: {
-    list: (query: ProductQuery = {}) => request<Product[]>(`/api/products${toQueryString(query)}`),
+    list: (query: ProductQuery = {}) => request<Product[]>(`/api/v1/products${toQueryString(query)}`),
     get: (id: number) => request<Product>(`/api/products/${id}`),
     create: (payload: ProductInput) => request<Product>('/api/products', jsonInit('POST', payload)),
     update: (id: number, payload: ProductInput) =>

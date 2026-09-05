@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
-	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
@@ -32,19 +32,21 @@ func Connect() {
 	}
 
 	dbHost := getEnv("DB_HOST", "localhost")
-	dbPort := getEnv("DB_PORT", "3306")
-	dbUser := getEnv("DB_USER", "root")
+	dbPort := getEnv("DB_PORT", "5432")
+	dbUser := getEnv("DB_USER", "postgres")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbName := getEnv("DB_NAME", "db_bootcamp_be08")
+	dbSSLMode := getEnv("DB_SSLMODE", "disable") // "require" bila DB di cloud
+	dbTimeZone := getEnv("DB_TIMEZONE", "Asia/Jakarta")
 
-	// DSN: format koneksi MySQL
+	// DSN: format koneksi PostgreSQL
 	dsn := fmt.Sprintf(
-		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		dbUser, dbPassword, dbHost, dbPort, dbName,
+		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s TimeZone=%s",
+		dbHost, dbPort, dbUser, dbPassword, dbName, dbSSLMode, dbTimeZone,
 	)
 
 	var err error
-	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
 		// Info: tampilkan semua SQL di terminal
 		// Error: hanya error (untuk production)
@@ -59,7 +61,7 @@ func Connect() {
 	sqlDB.SetMaxOpenConns(100)
 	sqlDB.SetConnMaxLifetime(time.Hour)
 
-	log.Println("✅ Terhubung ke MySQL!")
+	log.Println("✅ Terhubung ke PostgreSQL!")
 
 	migrate() // buat/ubah tabel + isi data awal
 }
@@ -69,6 +71,7 @@ func migrate() {
 	err := DB.AutoMigrate(
 		&models.Category{}, // CREATE TABLE categories (...)
 		&models.Product{},  // CREATE TABLE products (...)
+		&models.User{},
 	)
 	if err != nil {
 		log.Fatal("AutoMigrate gagal:", err)

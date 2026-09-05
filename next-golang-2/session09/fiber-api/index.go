@@ -113,21 +113,34 @@ func main() {
 	v1 := api.Group("/v1")   // /api/v1
 
 	products := v1.Group("/products")
+	users := v1.Group("/users")
+	// categories := v1.Group("/categories")
+
+	// ── PUBLIC — siapa saja bisa akses ──────────────────────────
+	auth := v1.Group("/auth")
+	auth.Post("/register", handler.Register)
+	auth.Post("/login", handler.Login)
+	// GET /me butuh login tapi bukan admin
+	auth.Get("/me", middlewares.Protected(), middlewares.GetMe)
+
 	products.Get("/", handler.GetProducts)       // /api/v1/products
 	products.Get("/:id", handler.GetProductByID) // /api/v1/products/1
-	products.Post("/", handler.CreateProduct)
+
+	// PRIVATE
+
+	products.Post("/", middlewares.Protected(), middlewares.RequireRole("admin"), handler.CreateProduct)
 	// membuat category dan product sekaligus. bila salah satunya gagal, maka akan di rollback proses sebelumnya
-	products.Post("/category", handler.CreateCategoryAndProduct)
+	products.Post("/category", middlewares.Protected(), middlewares.RequireRole("admin"), handler.CreateCategoryAndProduct)
 
 	// Upload file — 1 produk hanya boleh punya 1 image
-	// multipart/form-data, field: "image"
-	products.Post("/:id/image", handler.UploadProductImage)   // upload (gagal jika sudah ada)
-	products.Put("/:id/image", handler.ReplaceProductImage)   // ganti image
-	products.Delete("/:id/image", handler.DeleteProductImage) // hapus image
+	// multipart/form-data, field: "image"				// get fitur id from database , role_id, cocokkan role_id request dengan database
+	products.Post("/:id/image", middlewares.Protected(), middlewares.RequireRole("admin"), handler.UploadProductImage)   // upload (gagal jika sudah ada)
+	products.Put("/:id/image", middlewares.Protected(), middlewares.RequireRole("admin"), handler.ReplaceProductImage)   // ganti image
+	products.Delete("/:id/image", middlewares.Protected(), middlewares.RequireRole("admin"), handler.DeleteProductImage) // hapus image
 
-	// Middleware pada group
-	// admin := api.Group("/admin", AuthMiddleware) // middleware level router group
-	//admin.Get("/users", GetAllUsers)   // hanya admin yang bisa akses!
+	users.Get("/", middlewares.Protected(), middlewares.RequireRole("admin"), handler.GetUsers)       // /api/v1/users
+	users.Get("/:id", middlewares.Protected(), middlewares.RequireRole("admin"), handler.GetUserByID) // /api/v1/users/1
+	// end of private route
 
 	// Route pertama!
 	// path / url
@@ -151,18 +164,6 @@ func main() {
 		})
 	})
 
-	// Multi-param
-	// GET /api/users/5/posts/3
-	app.Get("/api/users/:uid/posts/:pid",
-		func(c *fiber.Ctx) error {
-			uid := c.Params("uid") // "5"
-			pid := c.Params("pid") // "3"
-			return c.JSON(fiber.Map{
-				"user": uid, "post": pid,
-			})
-		},
-	)
-
 	// Start server port 3000
-	app.Listen(":3000")
+	app.Listen(":3010")
 }
