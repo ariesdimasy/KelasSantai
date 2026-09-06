@@ -3,6 +3,7 @@ package main
 
 import (
 	"log"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -98,7 +99,14 @@ func main() {
 	// 	AllowCredentials: true,
 	// }))
 
-	app.Use(limiter.New()) // 4. Rate limiting
+	// 4. Rate limiting.
+	// Default limiter Fiber hanya 5 request per 30 detik — terlalu ketat untuk
+	// dipakai frontend (satu kali buka halaman produk saja sudah beberapa
+	// request), jadi dinaikkan. Turunkan lagi kalau mau demo rate limit.
+	app.Use(limiter.New(limiter.Config{
+		Max:        200,
+		Expiration: 1 * time.Minute,
+	}))
 	//app.Use(AuthMiddleware) // 5. Cek autentikasi
 
 	// Serve file hasil upload sebagai static file.
@@ -114,7 +122,7 @@ func main() {
 
 	products := v1.Group("/products")
 	users := v1.Group("/users")
-	// categories := v1.Group("/categories")
+	categories := v1.Group("/categories")
 
 	// ── PUBLIC — siapa saja bisa akses ──────────────────────────
 	auth := v1.Group("/auth")
@@ -125,6 +133,9 @@ func main() {
 
 	products.Get("/", handler.GetProducts)       // /api/v1/products
 	products.Get("/:id", handler.GetProductByID) // /api/v1/products/1
+
+	categories.Get("/", handler.GetCategories)      // /api/v1/categories
+	categories.Get("/:id", handler.GetCategoryByID) // /api/v1/categories/1
 
 	// PRIVATE
 
@@ -137,6 +148,13 @@ func main() {
 	products.Post("/:id/image", middlewares.Protected(), middlewares.RequireRole("admin"), handler.UploadProductImage)   // upload (gagal jika sudah ada)
 	products.Put("/:id/image", middlewares.Protected(), middlewares.RequireRole("admin"), handler.ReplaceProductImage)   // ganti image
 	products.Delete("/:id/image", middlewares.Protected(), middlewares.RequireRole("admin"), handler.DeleteProductImage) // hapus image
+
+	products.Put("/:id", middlewares.Protected(), middlewares.RequireRole("admin"), handler.UpdateProduct)    // edit produk
+	products.Delete("/:id", middlewares.Protected(), middlewares.RequireRole("admin"), handler.DeleteProduct) // hapus produk (soft delete)
+
+	categories.Post("/", middlewares.Protected(), middlewares.RequireRole("admin"), handler.CreateCategory)
+	categories.Put("/:id", middlewares.Protected(), middlewares.RequireRole("admin"), handler.UpdateCategory)
+	categories.Delete("/:id", middlewares.Protected(), middlewares.RequireRole("admin"), handler.DeleteCategory)
 
 	users.Get("/", middlewares.Protected(), middlewares.RequireRole("admin"), handler.GetUsers)       // /api/v1/users
 	users.Get("/:id", middlewares.Protected(), middlewares.RequireRole("admin"), handler.GetUserByID) // /api/v1/users/1

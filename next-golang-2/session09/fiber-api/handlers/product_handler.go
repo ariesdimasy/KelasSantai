@@ -131,6 +131,106 @@ func CreateProduct(c *fiber.Ctx) error {
 	return helpers.Created(c, "Data Produk berhasil di buat", product)
 }
 
+// UpdateProduct: PUT /api/v1/products/:id — admin. Partial update.
+//
+// Image TIDAK diubah di sini — pakai endpoint /products/:id/image
+// karena bentuk request-nya multipart, bukan JSON.
+func UpdateProduct(c *fiber.Ctx) error {
+	id, err := c.ParamsInt("id")
+	if err != nil {
+		return helpers.BadRequest(c, "ID harus berupa angka")
+	}
+
+	var req models.UpdateProductRequest
+	if err := c.BodyParser(&req); err != nil {
+		return helpers.BadRequest(c, "Format JSON tidak valid")
+	}
+	if errs := validator.Validate(req); errs != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"success": false,
+			"error":   "Validasi gagal",
+			"errors":  errs,
+		})
+	}
+
+	var product models.Product
+	if err := database.DB.First(&product, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return helpers.NotFound(c, "Produk tidak ditemukan")
+		}
+		return helpers.InternalError(c, "Gagal mengambil data produk")
+	}
+
+	// Kumpulkan hanya field yang dikirim client.
+	// Pakai map, bukan struct: Updates(struct) mengabaikan nilai nol,
+	// jadi stock=0 atau is_active=false tidak akan pernah tersimpan.
+	updates := map[string]interface{}{}
+
+	if req.Name != "" {
+		updates["name"] = req.Name
+	}
+	if req.Description != "" {
+		updates["description"] = req.Description
+	}
+	if req.Price != nil {
+		updates["price"] = *req.Price
+	}
+	if req.Stock != nil {
+		updates["stock"] = *req.Stock
+	}
+	if req.IsActive != nil {
+		updates["is_active"] = *req.IsActive
+	}
+	if req.CategoryID != nil {
+		// Pastikan kategori tujuan ada — category_id NOT NULL + index,
+		// tapi tidak ada FK constraint yang menjaga isinya.
+		var category models.Category
+		if err := database.DB.First(&category, *req.CategoryID).Error; err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return helpers.BadRequest(c, "Kategori tidak ditemukan")
+			}
+			return helpers.InternalError(c, "Gagal memvalidasi kategori")
+		}
+		updates["category_id"] = *req.CategoryID
+	}
+
+	if len(updates) == 0 {
+		return helpers.OK(c, "Tidak ada perubahan", product)
+	}
+
+	if err := database.DB.Model(&product).Updates(updates).Error; err != nil {
+		return helpers.InternalError(c, "Gagal memperbarui produk")
+	}
+
+	database.DB.Preload("Category").First(&product, product.ID)
+	return helpers.OK(c, "Produk berhasil diperbarui", product)
+}
+
+// DeleteProduct: DELETE /api/v1/products/:id — admin.
+//
+// Soft delete: barisnya hanya ditandai DeletedAt, jadi file image
+// sengaja TIDAK dihapus supaya data masih bisa dipulihkan.
+func DeleteProduct(c *fiber.Ctx) error {
+	id, err := c.ParamsInt("id")
+	if err != nil {
+		return helpers.BadRequest(c, "ID harus berupa angka")
+	}
+
+	var product models.Product
+	if err := database.DB.First(&product, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return helpers.NotFound(c, "Produk tidak ditemukan")
+		}
+		return helpers.InternalError(c, "Gagal mengambil data produk")
+	}
+
+	if err := database.DB.Delete(&product).Error; err != nil {
+		return helpers.InternalError(c, "Gagal menghapus produk")
+	}
+
+	return helpers.OK(c, "Produk berhasil dihapus", nil)
+}
+
 func CreateCategoryAndProduct(c *fiber.Ctx) error {
 	// Memulai transaksi otomatis
 	return database.DB.Transaction(func(tx *gorm.DB) error {
@@ -152,8 +252,13 @@ func CreateCategoryAndProduct(c *fiber.Ctx) error {
 			})
 		}
 
-		// 1. Buat Kategori Baru
-		newCategory := models.Category{Name: req.Category}
+		// 1. Buat Kategori Baru.
+		// Slug wajib diisi: kolomnya uniqueIndex, jadi kalau dibiarkan kosong
+		// endpoint ini hanya berhasil sekali — panggilan kedua bentrok "" vs "".
+		newCategory := models.Category{
+			Name: req.Category,
+			Slug: helpers.Slugify(req.Category),
+		}
 		if err := tx.Create(&newCategory).Error; err != nil {
 			// Otomatis rollback jika error
 			return err

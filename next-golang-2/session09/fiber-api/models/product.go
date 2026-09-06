@@ -33,6 +33,18 @@ type CreateProductRequest struct {
 	CategoryID uint `json:"category" validate:"required"`
 }
 
+// UpdateProductRequest: partial update — semua field opsional.
+// Pointer dipakai untuk angka & bool supaya "tidak dikirim" (nil) bisa
+// dibedakan dari nilai nol yang memang disengaja (harga 0, stok 0, false).
+type UpdateProductRequest struct {
+	Name        string `json:"name" validate:"omitempty,min=3,max=100"`
+	Description string `json:"description" validate:"omitempty,min=10,max=1000"`
+	Price       *int   `json:"price" validate:"omitempty,gt=0"`
+	Stock       *int   `json:"stock" validate:"omitempty,gte=0"`
+	IsActive    *bool  `json:"is_active"`
+	CategoryID  *uint  `json:"category"`
+}
+
 type CreateProductAndCategoryRequest struct {
 	Name        string `json:"name" validate:"required,min=3,max=100"`
 	Description string `json:"description" validate:"required,min=10,max=1000"`

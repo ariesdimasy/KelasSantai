@@ -1,0 +1,6 @@
+@import 'tailwindcss';
+
+/* Preline UI — variants + sumber class dari file JS-nya
+   supaya class yang hanya dipakai plugin Preline tidak ke-purge. */
+@source '../node_modules/preline/dist/*.js';
+@import '../node_modules/preline/variants.css';

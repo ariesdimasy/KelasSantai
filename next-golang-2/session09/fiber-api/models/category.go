@@ -17,6 +17,24 @@ type Category struct {
 	Products []Product `json:"products" gorm:"foreignKey:CategoryID"`
 }
 
+// --- DTO ---------------------------------------------------------------------
+//
+// Slug tidak ada di request: server yang menurunkannya dari Name
+// (lihat helpers.Slugify) supaya bentuknya selalu konsisten.
+
+type CreateCategoryRequest struct {
+	Name        string `json:"name" validate:"required,min=3,max=100"`
+	Description string `json:"description" validate:"omitempty,max=1000"`
+}
+
+// UpdateCategoryRequest: semua field opsional (partial update).
+type UpdateCategoryRequest struct {
+	Name string `json:"name" validate:"omitempty,min=3,max=100"`
+	// pointer supaya bisa membedakan "tidak dikirim" (nil)
+	// dari "dikirim string kosong" (mengosongkan deskripsi)
+	Description *string `json:"description" validate:"omitempty,max=1000"`
+}
+
 // Hasil AutoMigrate di MySQL:
 // CREATE TABLE categories (
 //   id bigint unsigned AUTO_INCREMENT,
